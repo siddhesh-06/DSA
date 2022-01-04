@@ -13,20 +13,163 @@ class Node {
 
 }
 
+
 public class arrayPractice {
     public static void main(String args[]){
-        int a[] = {2, 3, 4, 5, -1, 0};
+        int a[] = {5,4,-1,7,8};
+        int b[] = {1,2,8,45,12,5,5};
         arrayPractice obj =new arrayPractice();
-        obj.largetProduct(a);
+        obj.largestSum(a);
+    }
+
+    //25] Max jumps
+
+    static int maxJump(int arr[]){
+        int c=0,i=0,l=arr.length-1;
+
+        while (i<l){
+            int start=arr[i];
+            i=i+start;
+            c++;
+        }
+
+        return c;
+    }
+
+    //24] MAX profit of stock
+
+    void maxProfit(int arr[]){
+        int profit=0;
+
+        for(int i=1;i<arr.length;i++){
+            int sub=arr[i]-arr[i-1];
+            if(profit>sub){
+                profit=profit+sub;
+            }
+        }
+        System.out.println("Profit is: "+profit);
+    }
+
+    //23] Count k/n
+
+    void vcountK(int arr[],int k){
+        int z=arr.length/k;
+        int c=0;
+
+        HashMap<Integer,Integer> hm= new HashMap<>();
+
+        for(int i=0;i<arr.length;i++){
+            if(!hm.containsKey(arr[i])){
+                hm.put(arr[i],1);
+            }else{
+                int count=hm.get(arr[i]);
+                hm.put(arr[i],count+1);
+            }
+        }
+
+        for(Map.Entry<Integer,Integer> entry : hm.entrySet()){
+            if(entry.getValue()>z){
+                c++;
+            }
+        }
+
+        System.out.println(c);
+    }
+
+
+    //22] Minimum element in rotated sorted array
+
+    int findMinNumb(int arr[]){
+        int low=0;int high=arr.length-1;
+
+
+        while (low<high){ // if arr size is 1
+            int mid=(low+high)/2;
+
+            if(arr[mid]<arr[high]){
+                high=mid;
+            }else{
+                low=mid+1;
+            }
+        }
+
+        return arr[high];
+
+        //complex: o(logn)
+    }
+
+    //21] Consecutive  elements
+
+    static void consecutive (int arr[]){
+        HashMap<Integer,Boolean> h =new HashMap<>();
+
+        for(int i : arr){
+            h.put(i,true);
+        }
+
+        for(int i: arr){
+            if(h.containsKey(i-1)){
+                h.put(i,false);
+            }
+        }
+
+        int msp=0;
+        int ml=0;
+
+        for(int val : arr){
+            if(h.get(val)==true){
+                int tl=1;
+                int tsp=val;
+
+                while (h.containsKey(tsp+tl)){
+                    tl++;
+                 }
+                if(tl>ml){
+                    msp=tsp;
+                    ml=tl;
+                }
+            }
+        }
+
+        for(int i=0;i<ml;i++){
+            System.out.println(msp+i);
+        }
+
     }
 
     //20] Largest product in subarray
     void largetProduct(int arr[]){
 
-        //using kadane's
+        //optimize => o(n)
+        int n=arr.length;
+
+        if(n<0){
+            return;
+        }
+
+        int res=1;
+        int min=1;
+        int max=1;
+
+        for(int i=0;i<n;i++){
+            if(arr[i]>0){
+                max=max*arr[i];
+                min=Math.min(arr[i]*min,1); //min always=1
+            }else if(arr[i]==0){
+                min=max=1;
+            }else {
+                min=min+max-(max=min); //swapping
+                min=min*arr[i];
+                max=Math.max(1,arr[i]*max);
+            }
+            res=Math.max(max,res);
+        }
+        System.out.println("Product is: "+res);
 
 
-        //brutforce method
+
+        //brutforce method => o(n^2)
+
 //        int msum=0;
 //
 //        for(int i=0;i<arr.length;i++){
@@ -39,9 +182,11 @@ public class arrayPractice {
 //            }
 //        }
 //        System.out.println("Product is: "+msum);
+
     }
 
     //19] Largest sum in subarray
+
     void largestSum(int arr[]){
         //kadane's algorithm
 
@@ -122,7 +267,7 @@ public class arrayPractice {
     }
 
 
-    //17] Subarray
+    //17] Subarray : sum equal to zero
     boolean subArray(int a[]){
         Set<Integer> h =new HashSet<>();
         int sum =0;
@@ -179,6 +324,9 @@ public class arrayPractice {
                 System.out.println(a[i]);
             }
         }
+
+        // Complex: o(n^2)
+
     }
 
     //13]First repeating element
@@ -232,6 +380,8 @@ public class arrayPractice {
             }
         }
         System.out.println(arr);
+
+        //Complex: o(n^2)
     }
 
     //10] Find disapper number
@@ -248,7 +398,7 @@ public class arrayPractice {
     }
 
     //9] Intersection of array
-    void intersectionOfArray(int a[],int b[]){
+    void intersectionOfArrays(int a[],int b[]){
         //using hashset
         HashSet<Integer> h =new HashSet<>();
         for(int i=0;i<a.length;i++){
@@ -260,18 +410,26 @@ public class arrayPractice {
             }
         }
     }
-    //8] cyclic rotation by one
-    void cyclicRotateByOne(int a[]){
+    //8] cyclic rotation by right
+    void cyclicRotateByRight(int a[], int n){
         int b[] =new int[a.length];
-        b[0] = a[a.length-1];
+        int k=0;
+        int z=a.length-n;
 
-        for(int i=0;i<a.length-1;i++){
-            b[i+1] = a[i];
+        for(int i=z;i<a.length;i++){
+            b[k]=a[i];
+            k++;
         }
 
-        for(int i=0;i<b.length;i++){
-            System.out.print(b[i]+", ");
+        for (int h=0;h<z;h++){
+            b[k]=a[h];
+            k++;
         }
+
+        for(int j :b){
+            System.out.print(j+", ");
+        }
+
 
         //Complex: o(n)
     }
@@ -285,6 +443,7 @@ public class arrayPractice {
         for(int i=0;i<a.length;i++){
             mp.put(a[i],i);
         }
+
         for(int j=0;j<b.length;j++){
             mp.put(b[j],j);
         }
@@ -391,6 +550,7 @@ public class arrayPractice {
             System.out.print(b[i]+",");
         }
     }
+
     //1] prime no in range
     void primeNumbersInRange(int n){
         int c;

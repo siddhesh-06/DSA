@@ -8,21 +8,49 @@ public class stringPractice {
 
         Scanner sc =new Scanner(System.in);
         stringPractice s = new stringPractice();
-        int c=0;
-        String a= sc.next();
+        s.reverseByWord("Let's take LeetCode contest");
 
-        String temp="";
-        temp=a;
-        char z;
-        for(int i=0;i<a.length();i++){
-            if(temp.charAt(i)=='0'){
-                c++;
-                temp=s.reverseString(temp);
-            }
-        }
-        System.out.println(c);
     }
 
+    // Level 2 Problems
+
+    //3]
+
+    //2] Remove duplicate Char
+
+    public static void removeDup(String a){
+
+        // Here we dont use HashSet because it can't maintain order of elements.
+        // but, LinkedHashSet should maintain the order of elements.
+
+        LinkedHashSet<Character> h =new LinkedHashSet<>();
+
+        for(int i=0;i<a.length();i++){
+            h.add(a.charAt(i));
+        }
+        StringBuilder temp= new StringBuilder();
+        for(char i: h){
+            temp.append(i);
+            System.out.print(i);
+        }
+
+        //Use iterator to print all elements in HashSet
+//        Iterator I = h.iterator();
+//        while(I.hasNext()){
+//            System.out.print(I.next());
+//        }
+    }
+
+    //1] One string is a rotation of another.
+    public static void rotationString(String a,String b){
+        if(a.length()==b.length() && (a+b).indexOf(b) != -1){
+            System.out.println("Rotaion of another");
+        }else{
+            System.out.println("Not rotation of another.");
+        }
+    }
+
+    //12] Reverse String
     public String reverseString(String a){
         String reverse="";
         for(int i=0;i<a.length();i++){

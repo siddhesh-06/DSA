@@ -1,32 +1,49 @@
 package Algorithm;
 
-import java.beans.PropertyEditorSupport;
-
 public class knapsackRecursive {
+    //Dp array
+    static int t[][] = new int[5][8];
+
     public static void main(String args[]){
-        int a[] ={2,3,1};
-        int b[] ={15,5,3};
+        int w[] ={1,3,4,5};
+        int v[] ={1,4,5,7};
+        int cap=7;
+        int n=4;
+
+        //Assign to -1
+        for(int i=0;i<n+1;i++){
+            for(int j=0;j<cap+1;j++){
+                t[i][j]=-1;
+            }
+        }
+
         knapsackRecursive k =new knapsackRecursive();
-        k.recursiveKnap(b,a,5,3);
-        System.out.println(k.recursiveKnap(a,b,5,3));
+        System.out.println("Ans: "+k.recursiveKnap(w,v,cap,n));
+
+
     }
 
     public int max(int a,int b){
         return  a>b ? a : b;
     }
 
-    public int recursiveKnap(int wt[],int val[],int cap,int n){
-        if(n==0 || cap==0){
-            return 0;
+    public int recursiveKnap(int[] w, int[] v, int cap, int n){
+        if(n==0 || cap==0){ //base condition
+            return 0;       //op for bc
         }
 
-        if(wt[n-1] <= cap){
-            return max(val[n-1] + recursiveKnap(wt,val,cap-wt[n-1],n-1),recursiveKnap(wt,val,cap,n-1));
-        }else if(wt[n-1]>cap){
-            return recursiveKnap(wt,val,cap,n-1);
+        if(t[n][cap]!=-1){
+            return t[n][cap];
         }
 
-        return 0;
+        if(w[n-1]<=cap){
+            t[n][cap] = max(v[n-1]+recursiveKnap(w,v,cap-w[n-1],n-1),recursiveKnap(w,v,cap,n-1));
+            return t[n][cap];
+        }else {
+            t[n][cap] =recursiveKnap(w, v, cap, n-1);
+            return t[n][cap];
+        }
+
     }
 
 }

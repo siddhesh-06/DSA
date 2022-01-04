@@ -6,6 +6,7 @@ class A{
     }
 }
 
+
 class B extends A{
    public void hey(){
         System.out.println("Class B");

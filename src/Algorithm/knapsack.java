@@ -3,6 +3,11 @@ package Algorithm;
 import java.util.Arrays;
 import java.util.Scanner;
 
+//Divide and Conquer algorithm works by dividing a problem into subproblems, conquer by solving each subproblem recursively and then combine these solutions to get solution of the main problem.
+//Whereas DP is a optimization technique for solving problems in an optimised manner by dividing problem into smaller subproblems and then evaluating and storing their results and constructing an optimal solution for main problem from computed information.
+// The most important difference in Divide and Conquer strategy is that the subproblems are independent of each other. When a problem is divided into subproblems, they do not overlap which is why each subproblem is to be solved only once.
+//Whereas in DP, a subproblem solved as part of a bigger problem may be required to be solved again as part of another subproblem (concept of overlapping subproblem), so the results of a subproblem is solved and stored so that the next time it is encountered, the result is simply fetched and returned.
+
 class storage{
     int profit,weight;
     double p_w;
@@ -12,6 +17,7 @@ class storage{
         this.weight=w;
         this.p_w=(double) p/w;
     }
+
 }
 
 public class knapsack {
@@ -19,6 +25,10 @@ public class knapsack {
         Scanner sc = new Scanner(System.in);
 
         int m,obj,p,w;
+
+        // P => 60,100,120
+        // W => 10,20,30
+        // Cap => 50
 
         System.out.print("Enter capacity of bag: ");
         m=sc.nextInt();
@@ -67,17 +77,14 @@ public class knapsack {
 
         for(int i =0;i<obj;i++){
             if(currentW +st[i].weight <=m){
-
                 currentW = currentW + st[i].weight;
-                final_value += st[i].profit;
-
+                final_value = final_value + st[i].profit;
             }else{
-
                 double remain = m - currentW;
                 final_value += st[i].p_w * remain;
-
             }
         }
+        System.out.println();
         System.out.println("Final value: "+final_value);
 
 
