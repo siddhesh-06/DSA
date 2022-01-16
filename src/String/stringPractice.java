@@ -8,7 +8,10 @@ public class stringPractice {
 
         Scanner sc =new Scanner(System.in);
         stringPractice s = new stringPractice();
-        s.reverseByWord("Let's take LeetCode contest");
+//        s.reverseByWord("Let's take LeetCode contest");
+
+        String a ="sidddhesh dhain kaod akd";
+        System.out.println(a.split(" ").length);
 
     }
 

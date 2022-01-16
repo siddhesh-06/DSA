@@ -31,7 +31,7 @@ public class Main {
             }
         }
 
-        private void put(K key,V value) throws Exception{
+        public void put(K key,V value) throws Exception{
             int bi = hashfn(key);
             int di = getIndexWithinBucket(key,bi);
 
@@ -78,7 +78,7 @@ public class Main {
             return -1;
         }
 
-        private V get(K key) throws Exception {
+        public V get(K key) throws Exception {
             int bi = hashfn(key);
             int di = getIndexWithinBucket(key,bi);
 
@@ -107,7 +107,7 @@ public class Main {
             }
         }
 
-        private boolean containsKey(K key){
+        public boolean containsKey(K key){
             int bi = hashfn(key);
             int di = getIndexWithinBucket(key,bi);
 
