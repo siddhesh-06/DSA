@@ -50,7 +50,6 @@ public class minSubsetDiffDP {
         }
 
         int min=Integer.MAX_VALUE;
-
         for(int i=0;i<(sum+1)/2;i++){
             if(t[arr.length][i]==true){
                 min = Math.min(min,sum-2*i);

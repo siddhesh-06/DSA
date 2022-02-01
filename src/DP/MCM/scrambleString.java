@@ -32,7 +32,6 @@ public class scrambleString {
         boolean flag = false;
 
         for(int i=1;i<=n-1;i++){
-
             boolean cod1 = (solve(a.substring(0,i),b.substring(i,n))) && (solve(a.substring(i,n),b.substring(0,i)));
             boolean cod2 = (solve(a.substring(0,i),b.substring(0,i)) ) && (solve(a.substring(i,n),b.substring(i,n)));
             if(cod1 || cod2){

@@ -1,5 +1,6 @@
 package Array;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 class Node {
@@ -13,17 +14,22 @@ class Node {
 
 }
 
-
 public class arrayPractice {
     public static void main(String args[]){
-        int a[] = {5,4,-1,7,8};
-        int b[] = {1,2,8,45,12,5,5};
-        arrayPractice obj =new arrayPractice();
-        obj.largestSum(a);
+        System.out.println(isPalindrome(121));
+    }
+    static boolean isPalindrome(int x) {
+        if(x<0 || (x!=0 && x%10==0))
+            return false;
+        int res = 0;
+        while(x>res){
+            res = res*10 + x%10;
+            x = x/10;
+        }
+        return (x==res || x==res/10);
     }
 
     //25] Max jumps
-
     static int maxJump(int arr[]){
         int c=0,i=0,l=arr.length-1;
 
@@ -37,7 +43,6 @@ public class arrayPractice {
     }
 
     //24] MAX profit of stock
-
     void maxProfit(int arr[]){
         int profit=0;
 
@@ -51,7 +56,6 @@ public class arrayPractice {
     }
 
     //23] Count k/n
-
     void vcountK(int arr[],int k){
         int z=arr.length/k;
         int c=0;
@@ -76,9 +80,7 @@ public class arrayPractice {
         System.out.println(c);
     }
 
-
     //22] Minimum element in rotated sorted array
-
     int findMinNumb(int arr[]){
         int low=0;int high=arr.length-1;
 
@@ -99,7 +101,6 @@ public class arrayPractice {
     }
 
     //21] Consecutive  elements
-
     static void consecutive (int arr[]){
         HashMap<Integer,Boolean> h =new HashMap<>();
 
@@ -186,7 +187,6 @@ public class arrayPractice {
     }
 
     //19] Largest sum in subarray
-
     void largestSum(int arr[]){
         //kadane's algorithm
 
@@ -238,7 +238,6 @@ public class arrayPractice {
         }
         print(tail);
     }
-
     void multiply(Node tail,int i){
         Node temp=tail;
         Node prevNode=tail;
@@ -258,14 +257,12 @@ public class arrayPractice {
         }
 
     }
-
     void print(Node tail){
         if(tail==null){
             return;        }
         print(tail.prev);
         System.out.print(tail.data);
     }
-
 
     //17] Subarray : sum equal to zero
     boolean subArray(int a[]){
@@ -410,6 +407,7 @@ public class arrayPractice {
             }
         }
     }
+
     //8] cyclic rotation by right
     void cyclicRotateByRight(int a[], int n){
         int b[] =new int[a.length];
@@ -433,7 +431,6 @@ public class arrayPractice {
 
         //Complex: o(n)
     }
-
 
     //7] union of array
     void unionOfArray(int a[],int b[]){
@@ -523,6 +520,7 @@ public class arrayPractice {
             System.out.print(b[i]+",");
         }
     }
+
     //2] sort array 0 ,1
     void arraySort(int a[]){
         int b[]=new int[a.length];

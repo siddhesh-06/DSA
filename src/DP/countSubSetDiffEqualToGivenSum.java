@@ -10,15 +10,21 @@ public class countSubSetDiffEqualToGivenSum {
 
     public static void main(String args[]){
         int arr[]={1,1,2,3};
-        int diff = 1;
 
+        int diff = 1;
         int arrSum = 0;
+        // {1,1,2} - {3} => 1
+        // {1,3} - {2,1} => 1
+        // {3,1} - {1,2} => 1
+
         int s1 = 0;
 
         for(int i=0;i<arr.length;i++){
             arrSum+=arr[i];
         }
-
+        // s1 -s2 = diff (1)
+        // s1 + s2 = arrSum
+        // s1 = (diff + arrSum) / 2
         s1 = (diff+arrSum)/2;
 
         countSubSetDiffEqualToGivenSum cs = new countSubSetDiffEqualToGivenSum(arr.length,s1);

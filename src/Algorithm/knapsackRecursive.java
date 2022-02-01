@@ -11,11 +11,11 @@ public class knapsackRecursive {
         int n=4;
 
         //Assign to -1
-        for(int i=0;i<n+1;i++){
-            for(int j=0;j<cap+1;j++){
-                t[i][j]=-1;
-            }
-        }
+//        for(int i=0;i<n+1;i++){
+//            for(int j=0;j<cap+1;j++){
+//                t[i][j]=-1;
+//            }
+//        }
 
         knapsackRecursive k =new knapsackRecursive();
         System.out.println("Ans: "+k.recursiveKnap(w,v,cap,n));
@@ -32,16 +32,16 @@ public class knapsackRecursive {
             return 0;       //op for bc
         }
 
-        if(t[n][cap]!=-1){
-            return t[n][cap];
-        }
+//        if(t[n][cap]!=-1){
+//            return t[n][cap];
+//        }
 
         if(w[n-1]<=cap){
-            t[n][cap] = max(v[n-1]+recursiveKnap(w,v,cap-w[n-1],n-1),recursiveKnap(w,v,cap,n-1));
-            return t[n][cap];
+            return  max(v[n-1]+recursiveKnap(w,v,cap-w[n-1],n-1),recursiveKnap(w,v,cap,n-1));
+//            return t[n][cap];
         }else {
-            t[n][cap] =recursiveKnap(w, v, cap, n-1);
-            return t[n][cap];
+            return recursiveKnap(w, v, cap, n-1);
+//            return t[n][cap];
         }
 
     }

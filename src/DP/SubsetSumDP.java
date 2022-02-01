@@ -31,7 +31,6 @@ public class SubsetSumDP {
     public boolean subset(int w[],int cap,int n){
         for(int i=1;i<w.length+1;i++){
             for(int j=1;j<cap+1;j++){
-
                 if(w[i-1]<=j){
                     t[i][j] = t[i-1][j-w[i-1]] || t[i-1][j];
                 }else{

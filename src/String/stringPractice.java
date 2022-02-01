@@ -1,26 +1,161 @@
 package String;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.regex.Pattern;
 
 public class stringPractice {
+    public static int t[][];
     public static void main(String args[]){
+        String a = "abc";
+        System.out.println(find_permutation(a));
+    }
 
-        Scanner sc =new Scanner(System.in);
-        stringPractice s = new stringPractice();
-//        s.reverseByWord("Let's take LeetCode contest");
-
-        String a ="sidddhesh dhain kaod akd";
-        System.out.println(a.split(" ").length);
+    static String sortSentence(String s){
+        String arr[] = s.split(" ");
+        String temp[] = new String[arr.length];
+        for(String w : arr){
+            int index = Integer.parseInt(w.substring(w.length()-1)) -1;
+            temp[index] = w.substring(0,w.length()-1);
+        }
+        String ans = "";
+        for(String ros : temp){
+            ans+=" "+ros;
+        }
+        return ans.substring(0,ans.length()-1);
 
     }
 
-    // Level 2 Problems
+    //10]
+    static int findSubString( String str) {
+        int c = 0;
+        String str1 = str.toLowerCase();
+        HashMap<Integer,Character> hm = new HashMap<>();
+        for(int i=0;i<str.length();i++){
+            if(!hm.containsValue(str1.charAt(i))){
+                hm.put(i,str1.charAt(i));
+            }else{
+                c++;
+            }
+        }
+        return c;
+    }
 
-    //3]
+    //8] Split the Binary string into two substring with equal 0’s and 1’s.
+    static int balancedStringSplit(String s) {
+        int c = 0, c0 = 0, c1 = 0;
+
+        for(int i=0;i<s.length();i++){
+            if(s.charAt(i)=='0'){
+                c0++;
+            }else{
+                c1++;
+            }
+
+            if(c0==c1){
+                c++;
+            }
+        }
+
+        if(c0!=c1) return -1;
+        return c;
+    }
+
+    //7] Permutations of a given string
+    static List<String> find_permutation(String S) {
+        List<String> ans = new ArrayList<>();
+        givePermu(S,0,"",ans);
+        return ans;
+    }
+    static void givePermu(String s, int idx, String s1, List<String> ans) {
+        if(s.length()==0){
+            ans.add(s1);
+            return;
+        }
+        for(int i=0;i<s.length();i++){
+            char ch = s.charAt(i);
+            String ros = s.substring(0,i) + s.substring(i+1);
+            givePermu(ros,i,s1+ch,ans);
+        }
+    }
+
+    //6] Print all Subsequences of a string.
+    static List<String> allSubsequences(String str){
+        List<String> ans = new ArrayList<>();
+        solveSubsequence(str,"",ans);
+        return ans;
+    }
+    static void solveSubsequence(String str,String ds,List<String> ans){
+        if(str.length()==0){
+            ans.add(ds);
+            return;
+        }
+        solveSubsequence(str.substring(1),ds+str.charAt(0),ans);
+        solveSubsequence(str.substring(1),ds,ans);
+    }
+
+    //5] Longest Repeating Subsequence
+    static int LongestRepeatingSubsequence(String str){
+        String str2 = str;
+        dpMatrix(str.length(),str2.length());
+        int ans = solve(str,str2);
+        return ans;
+    }
+    static void dpMatrix(int m,int n){
+        t = new int[m+1][n+1];
+
+        for(int i=0;i<m+1;i++){
+            for(int j=0;j<n+1;j++){
+                if(i==0 || j==0){
+                    t[i][j] = 0;
+                }
+            }
+        }
+    }
+    static int solve(String str, String str2){
+        int m = str.length();
+        int n = str2.length();
+
+        for(int i=1;i<m+1;i++){
+            for(int j=1;j<n+1;j++){
+                if(str.charAt(i-1) == str2.charAt(j-1) && i!=j ){
+                    t[i][j] = t[i-1][j-1] + 1;
+                }else{
+                    t[i][j] = Math.max(t[i][j-1],t[i-1][j]);
+                }
+            }
+        }
+        return t[m][n];
+
+    }
+
+    //4] Longest palindrome => odd-even method
+    static String longestPalin(String S){
+        if(S==null || S.length()<1) return "";
+
+        int start =0 ,end=0;
+        for(int i=0;i<S.length();i++){
+            int len1 = expandFromMiddle(S,i,i);
+            int len2 = expandFromMiddle(S,i,i+1);
+            int len = Math.max(len1,len2);
+            if(len > end - start){
+                start = i - (len-1)/2;
+                end = i + (len/2);
+            }
+        }
+        return S.substring(start,end+1);
+    }
+    static int expandFromMiddle(String s,int left,int right){
+        if(s==null || left>right) return 0;
+
+        while(left>=0 && right<s.length() && s.charAt(left)==s.charAt(right)){
+            left--;
+            right++;
+        }
+        return right - left - 1; // index of that pt
+    }
 
     //2] Remove duplicate Char
-
     public static void removeDup(String a){
 
         // Here we dont use HashSet because it can't maintain order of elements.
@@ -52,6 +187,9 @@ public class stringPractice {
             System.out.println("Not rotation of another.");
         }
     }
+
+    // --------- Level 2 Problems ----------
+
 
     //12] Reverse String
     public String reverseString(String a){
@@ -116,7 +254,6 @@ public class stringPractice {
         System.out.println(ans);
     }
 
-
     //7] Palindrome
     boolean palindrome(String str){
         int i=0,j=str.length()-1;
@@ -150,52 +287,39 @@ public class stringPractice {
     }
 
     //5] Brackets Match
-    void matchBrackets(String input){
-//        Stack<Character> stacky = new Stack<>();
-//        for (int i = 0; i < input.length(); i++) {
-//            if (!stacky.isEmpty()) {
-//                switch(input.charAt(i)) {
-//                    case '}' : if (stacky.peek() == '{') {
-//                        stacky.pop();
-//                    } break;
-//                    case ']' : if (stacky.peek() == '[') {
-//                        stacky.pop();
-//                    } break;
-//                    case ')' : if (stacky.peek() == '(') {
-//                        stacky.pop();
-//                    } break;
-//                    default: stacky.push(input.charAt(i));
-//                }
-//            } else {
-//                stacky.push(input.charAt(i));
-//            }
-//        }
-//        if(stacky.isEmpty()){
-//            System.out.println("Valid");
-//        }else{
-//            System.out.println("Invalid");
-//        }
-        Stack<Character> st=new Stack<>();
-        for(int i=0;i<input.length();i++){
-            if(!st.empty()){
-                switch (input.charAt(i)){
-                    case ']': if (st.peek() == '['){
-                        st.pop();
+    static void matchBrackets(String input){
+        Stack<Character> stacky = new Stack<>();
+        for (int i = 0; i < input.length(); i++) {
+            if (!stacky.isEmpty()) {
+                switch(input.charAt(i)) {
+                    case '}' : {
+                        if (stacky.peek() == '{') {
+                            stacky.pop();
+                        }else{
+                            stacky.push(input.charAt(i));
+                        }
                     }break;
-                    case '}': if (st.peek() == '{'){
-                        st.pop();
+                    case ']' : {
+                        if (stacky.peek() == '[') {
+                            stacky.pop();
+                        }else{
+                            stacky.push(input.charAt(i));
+                        }
+                    } break;
+                    case ')' : {
+                        if (stacky.peek() == '(') {
+                            stacky.pop();
+                        }else{
+                            stacky.push(input.charAt(i));
+                        }
                     }break;
-                    case ')': if (st.peek() == '('){
-                        st.pop();
-                    }break;
-                    default:
-                        st.push(input.charAt(i));
+                    default: stacky.push(input.charAt(i));
                 }
-            }else{
-                st.push(input.charAt(i));
+            } else {
+                stacky.push(input.charAt(i));
             }
         }
-        if(st.isEmpty()){
+        if(stacky.isEmpty()){
             System.out.println("Valid");
         }else{
             System.out.println("Invalid");
@@ -204,7 +328,7 @@ public class stringPractice {
 
     //4] Anagram string
     boolean anagramStr(String a,String b){
-        //A] Complex: o(nlon(n))
+        //A] Complex: o(nlon(n)+n) => o(n)
         if(a.length()!=b.length()) return false;
 
         char s1[]=a.toLowerCase().toCharArray();
@@ -218,7 +342,6 @@ public class stringPractice {
         }
         return true;
     }
-
 
     //3] Duplicate characters
     void duplicateChar(String a){

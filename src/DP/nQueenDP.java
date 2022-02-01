@@ -8,7 +8,7 @@ public class nQueenDP {
         System.out.print("Enter No: ");
         int n = sc.nextInt();
 
-        int [][] chess = new int[n][n];
+        int [][] chess = new int[4][4];
         printNQueens(chess,"",0);
     }
 

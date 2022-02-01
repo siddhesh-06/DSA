@@ -1,12 +1,220 @@
 package Recursion;
-
-import java.util.ArrayList;
+import java.util.*;
 
 public class recursionPractice {
     static String codes[] = {".;","abc","def","ghi","jkl","mno","pqrs","tu","vwx","yz"};
+    static int di[] = {-1,0,1,0};
+    static int dj[] = {0,-1,0,1};
 
     public static void main(String args[]){
-      permu("abc","");
+    }
+
+    // 25] Permutation - 2
+    static List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        boolean track[] = new boolean[nums.length];
+        List<Integer> ds = new ArrayList<>();
+        Arrays.sort(nums);
+        helper(nums,track,ans,ds);
+        return ans;
+    }
+    static void helper(int[] nums, boolean[] track, List<List<Integer>> ans, List<Integer> ds){
+        if(ds.size()==nums.length){
+            ans.add(new ArrayList<>(ds));
+            return;
+        }
+        for(int i=0;i<nums.length;i++){
+            if(track[i]) continue;
+            track[i] = true;
+            ds.add(nums[i]);
+            helper(nums,track,ans,ds);
+            ds.remove(ds.size()-1);
+            track[i] = false;
+
+            while(i+1 < nums.length && nums[i] == nums[i+1]){
+                i++;
+            }
+        }
+    }
+
+    // 24] Word search in board
+    public boolean exist(char[][] board, String word) {
+        for(int i=0;i<board.length;i++){
+            for(int j=0;j<board[0].length;j++){
+                if(board[i][j] == word.charAt(0)){
+                    boolean res = explore(board,i,j,0,word);
+                    if(res) return true;
+                }
+            }
+        }
+        return false;
+    }
+    static boolean explore(char[][] board,int i,int j,int si,String word){
+        if(si == word.length()) return true;
+        if( i<0 || j<0 || i>=board.length || j>=board[0].length) return false;
+        if(board[i][j] != word.charAt(si)) return false;
+
+        char myChar = board[i][j];
+        board[i][j] = '$';
+
+        for(int d = 0;d<4;d++){
+            boolean res = explore(board,i+di[d],j+dj[d],si+1,word);
+            if(res){
+                board[i][j] = myChar;
+                return true;
+            }
+        }
+        board[i][j] = myChar;
+        return false;
+    }
+
+    // 23] Print knight tour
+    static void knightTour(int chess[][], int r,int c,int move){
+        if(r<0 || c<0 || r>=chess.length || c>=chess.length || chess[r][c] >0){
+            return;
+        }else if(move == chess.length * chess.length){
+            chess[r][c] = move;
+            displayBoard(chess);
+            chess[r][c] = 0;
+            return;
+        }
+
+        chess[r][c] = 1;
+        knightTour(chess,r-2,c+1,move+1);
+        knightTour(chess,r-1,c+2,move+1);
+        knightTour(chess,r+1,c+2,move+1);
+        knightTour(chess,r+2,c+1,move+1);
+        knightTour(chess,r+2,c-1,move+1);
+        knightTour(chess,r+1,c-2,move+1);
+        knightTour(chess,r-1,c-2,move+1);
+        knightTour(chess,r-2,c-1,move+1);
+        chess[r][c] = 0;
+    }
+    static void displayBoard(int chess[][]){
+        for(int i=0;i<chess.length;i++){
+            for(int j=0;j<chess.length;j++){
+                System.out.print(chess[i][j]+" ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+    // 23] NQueen
+    static void NQueen(int chess[][], String qsf, int row){
+        if(row==chess.length){
+            System.out.println(qsf);
+            return;
+        }
+        for(int col=0;col<chess.length;col++){
+            if(isSafeForQueen(chess,row,col)){
+                chess[row][col] = 1;
+                NQueen(chess,qsf + row+"-"+col+", ",row+1);
+                chess[row][col] = 0;
+            }
+        }
+
+    }
+    static boolean isSafeForQueen(int chess[][],int row,int col){
+        for(int i=row-1,j=col;i>=0;i--){
+            if(chess[i][j]==1) return false;
+        }
+        for(int i=row-1,j=col-1;i>=0 && j>= 0;i--,j--){
+            if(chess[i][j]==1) return false;
+        }
+
+        for(int i=row-1,j=col+1;i>=0 && j<chess.length;i--,j++){
+            if(chess[i][j]==1) return false;
+        }
+        return true;
+    }
+
+    // 22] Subset print
+    static void subsetPrint(int arr[], int idx,String set,int sos,int t){
+        if(idx==arr.length){
+            if(sos==t){
+                System.out.println(set + ".");
+            }
+            return;
+        }
+
+        subsetPrint(arr,idx+1,set+arr[idx]+" ,",sos + arr[idx],t);
+        subsetPrint(arr,idx+1,set,sos,t);
+    }
+
+    // 21] Flooding
+    static void floodPath(int maze[][],int row,int col,String ans,boolean visited[][]){
+
+        // Input
+//        int maze[][] = new int[4][4];
+//        for(int i=0;i<4;i++){
+//            for(int j=0;j<4;j++){
+//                maze[i][j] = 0;
+//            }
+//        }
+//
+//        maze[0][1] = 1;
+//        maze[0][3] = 1;
+//        maze[1][1] = 1;
+//        maze[1][2] = 1;
+//        maze[3][1] = 1;
+//        boolean visited[][] = new boolean[4][4];
+//        floodPath(maze,0,0,"",visited);
+
+        if(row<0 || col<0 || row==maze.length || col==maze[0].length || maze[row][col]==1 || visited[row][col]==true){
+            return;
+        }
+
+        if(row==maze.length-1 && col==maze[0].length-1){
+            System.out.println(ans);
+            return;
+        }
+
+        visited[row][col] = true;
+        floodPath(maze,row-1,col,ans+"t",visited);
+        floodPath(maze,row,col-1,ans+"l",visited);
+        floodPath(maze,row+1,col,ans+"d",visited);
+        floodPath(maze,row,col+1,ans+"r",visited);
+        visited[row][col] = false;
+    }
+
+    // 20] Encodding
+    static void encodding(String ques,String ans){
+        if(ques.length()==0){
+            System.out.println(ans);
+            return;
+        }else if(ques.length()==1){
+            // for ONE digit
+            char ch = ques.charAt(0);
+            if(ch=='0'){
+                return;
+            }else{
+                int chv = ch -'0';
+                char code = (char)('a' + chv - 1);
+                System.out.println(ans+code);
+            }
+        }else{
+            // for TWO digit
+            char ch = ques.charAt(0);
+            String roq = ques.substring(1);
+
+            if(ch=='0'){
+                return;
+            }else{
+                int chv = ch -'0';
+                char code = (char)('a' + chv - 1);
+                encodding(roq,ans+code);
+            }
+
+            String ch12 = ques.substring(0,2);
+            String roq12 = ques.substring(2);
+
+            int ch12v = Integer.parseInt(ch12);
+            if(ch12v<=26){
+                char code = (char) ('a'+ch12v-1);
+                encodding(roq12,ans+code);
+            }
+        }
     }
 
     // 19] Permutation
