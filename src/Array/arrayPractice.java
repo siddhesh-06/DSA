@@ -1,5 +1,7 @@
 package Array;
 
+import com.sun.source.tree.Tree;
+
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -15,75 +17,260 @@ class Node {
 }
 
 public class arrayPractice {
+    static Scanner sc = new Scanner(System.in);
     public static void main(String args[]){
-        System.out.println(isPalindrome(121));
-    }
-    static boolean isPalindrome(int x) {
-        if(x<0 || (x!=0 && x%10==0))
-            return false;
-        int res = 0;
-        while(x>res){
-            res = res*10 + x%10;
-            x = x/10;
-        }
-        return (x==res || x==res/10);
+        int matrix[][] = {{1, 2, 3, 4},
+                {5, 6, 7, 8},
+                {9, 10, 11, 12},
+                {13, 14, 15,16}};
+        int arr[] = {1, 3, 5, 8, 9, 2, 6, 7, 6, 8, 9};
+        System.out.println(minNoOfJumps(arr));
     }
 
-    //25] Max jumps
-    static int maxJump(int arr[]){
-        int c=0,i=0,l=arr.length-1;
 
-        while (i<l){
-            int start=arr[i];
-            i=i+start;
-            c++;
+    //29] A1[] is subset of A2[]
+    static String isSubset( long a1[], long a2[], long n, long m) {
+        HashMap<Long,Integer> hm = new HashMap<>();
+
+        for(int i =0;i<a1.length;i++){
+            hm.put(a1[i],i);
         }
-
-        return c;
-    }
-
-    //24] MAX profit of stock
-    void maxProfit(int arr[]){
-        int profit=0;
-
-        for(int i=1;i<arr.length;i++){
-            int sub=arr[i]-arr[i-1];
-            if(profit>sub){
-                profit=profit+sub;
-            }
-        }
-        System.out.println("Profit is: "+profit);
-    }
-
-    //23] Count k/n
-    void vcountK(int arr[],int k){
-        int z=arr.length/k;
-        int c=0;
-
-        HashMap<Integer,Integer> hm= new HashMap<>();
-
-        for(int i=0;i<arr.length;i++){
-            if(!hm.containsKey(arr[i])){
-                hm.put(arr[i],1);
-            }else{
-                int count=hm.get(arr[i]);
-                hm.put(arr[i],count+1);
-            }
-        }
-
-        for(Map.Entry<Integer,Integer> entry : hm.entrySet()){
-            if(entry.getValue()>z){
+        int c = 0;
+        for(int j=0;j<a2.length;j++){
+            if(hm.containsKey(a2[j])){
                 c++;
             }
         }
 
-        System.out.println(c);
+        if(n<m){
+            if(c==n) return "Yes";
+            else return "No";
+        }else{
+            if(c==m) return "Yes";
+            else return "No";
+        }
     }
 
-    //22] Minimum element in rotated sorted array
-    int findMinNumb(int arr[]){
-        int low=0;int high=arr.length-1;
+    //27] Median in row wise matrix
+    static int findMedian(ArrayList<ArrayList<Integer>> mt){
+        int low = Integer.MIN_VALUE;
+        int high = Integer.MAX_VALUE;
+        int n = mt.size(); //row
+        int m = mt.get(0).size(); // col
 
+        while (low<=high){
+            int mid = low + (high-low)/2;
+            int cnt = 0;
+            for(int i=0;i<n;i++){
+                cnt+= countSmallerThanMedian(mt.get(i),mid);
+            }
+            if(cnt<= (n*m)/2) low=mid+1;
+            else high=mid-1;
+        }
+        return low;
+    }
+    static int countSmallerThanMedian(ArrayList<Integer> row,int mid){
+        int start = 0;
+        int end = row.size()-1;
+        while (start<=end){
+            int md = start + (end-start)/2;
+            if(row.get(md)<=mid){
+                start=md+1;
+            }else{
+                end=mid-1;
+            }
+        }
+        return start;
+    }
+
+    //28] Print matrix in spiral manner
+    static void print2DMatrixSpiral(int arr[][]){
+        int minr = 0;
+        int minc = 0;
+        int maxr = arr.length-1;
+        int maxc = arr[0].length-1;
+
+        int target = arr.length*arr[0].length;
+        int count = 0;
+
+        while (count<target){
+            //left
+            for(int i=minr, j=minc;i<=maxr && count<target;i++){
+                System.out.println(arr[i][j]);
+                count++;
+            }
+            minc++;
+
+            //down
+            for(int i=maxr, j=minc;j<=maxc && count<target;j++){
+                System.out.println(arr[i][j]);
+                count++;
+            }
+            maxr--;
+
+            //right
+            for(int i=maxr, j=maxc;i>=minr && count<target;i--){
+                System.out.println(arr[i][j]);
+                count++;
+            }
+            maxc--;
+
+            //top
+            for(int i=minr, j=maxc;j>=minc && count<target;j--){
+                System.out.println(arr[i][j]);
+                count++;
+            }
+            minr++;
+        }
+    }
+
+    //26] MAX 1's in row
+    static int rowWithMax1s(int arr[][], int n, int m) {
+        int count = 0, maxCount = Integer.MIN_VALUE, idx = -1;
+        for (int row=0;row<n;row++){
+            for(int col=0;col<m;col++){
+                count = leftOne(arr,row,col) + rightOne(arr,row,col) - 1;
+                if(count!=0 && count>maxCount){
+                    maxCount = count;
+                    idx = row;
+                }
+            }
+        }
+        return idx;
+    }
+    static int leftOne(int arr[][],int row,int col){
+        int start = 0;
+        int end = arr.length-1;
+        int res = 0;
+        while(start<=end){
+            int mid = start + (end-start)/2;
+            if(arr[row][mid]==1){
+                res = mid;
+                end=mid-1;
+            }else{
+                start=mid+1;
+            }
+        }
+        return res;
+    }
+    static int rightOne(int arr[][],int row,int col){
+        int start = 0;
+        int end = arr.length-1;
+        int res = 0;
+        while(start<=end){
+            int mid = start + (end-start)/2;
+            if(arr[row][mid]==1){
+                res = mid;
+                start=mid+1;
+            }else{
+                start=mid+1;
+            }
+        }
+        return res;
+    }
+
+    //25] Create N*M matrix and print it
+    static void printNM_Matrix(){
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int m = sc.nextInt();
+
+        int mt[][] = new int[n][m];
+        System.out.println("N, M : "+mt.length+" "+mt[0].length);
+        for(int i=0;i<mt.length;i++){
+            for(int j=0;j<mt[0].length;j++){
+                mt[i][j] = sc.nextInt();
+            }
+        }
+
+        for(int i=0;i<mt.length;i++){
+            for(int j=0;j<mt[0].length;j++){
+                System.out.print(mt[i][j]+" ");
+            }
+            System.out.println();
+        }
+    }
+
+    //24] Triplet
+    static boolean find3Numbers(int arr[], int n, int X) {
+        // o(n^3)
+        // o(n^2) + o(n)
+        // o(n^2) + o(1)
+        Arrays.sort(arr);
+        for(int i=0;i<n-2;i++){
+            int start = i+1;
+            int end = n-1;
+            while (start<end){
+                if(arr[start]+arr[end]+arr[i]==X){
+                    return true;
+                }else if(arr[start]+arr[end]+arr[i]<X){
+                    start++;
+                }else{
+                    end--;
+                }
+            }
+        }
+        return false;
+    }
+
+    //23] Find 2 repetitive el
+    static List<Integer> findTwoRepe(int nums[]){
+        List<Integer> ans = new ArrayList<>();
+
+        for(int i=0;i<nums.length;i++){
+            int index = Math.abs(nums[i])-1;
+            if(nums[index]<0) ans.add(index+1);
+            nums[index] = -nums[index];
+        }
+        return ans;
+    }
+
+    //22] Min number of jumps to reach end
+    static int minNoOfJumps(int arr[]){
+        if (arr.length <= 1)
+            return 0;
+
+        if (arr[0] == 0)
+            return -1;
+
+        int maxReach = arr[0];
+        int step = arr[0];
+        int jump = 1;
+
+        for (int i = 1; i < arr.length; i++) {
+            if (i == arr.length - 1)
+                return jump;
+            maxReach = Math.max(maxReach, i + arr[i]); // actual jumps from position
+            step--;
+            if (step == 0) {
+                jump++;
+                if (i >= maxReach)
+                    return -1;
+                step = maxReach - i; //remainng step
+            }
+        }
+
+        return -1;
+    }
+
+    //18] Ocuurence = k/n times
+    static void findFTimesOcuurence(int arr[],int k){
+        int f = arr.length/k;
+
+        TreeMap<Integer,Integer> tm = new TreeMap<>();
+
+        for(int val : arr) tm.put(val,tm.getOrDefault(val,0)+1);
+
+        for(Map.Entry<Integer,Integer> m : tm.entrySet()){
+            if( (int) m.getValue()>f){
+                System.out.println(m.getKey());
+            }
+        }
+    }
+
+    //17] Minimum element in rotated sorted array
+    static int findMinNumb(int arr[]){
+        int low=0;int high=arr.length-1;
 
         while (low<high){ // if arr size is 1
             int mid=(low+high)/2;
@@ -100,74 +287,65 @@ public class arrayPractice {
         //complex: o(logn)
     }
 
-    //21] Consecutive  elements
-    static void consecutive (int arr[]){
-        HashMap<Integer,Boolean> h =new HashMap<>();
-
-        for(int i : arr){
-            h.put(i,true);
-        }
-
-        for(int i: arr){
-            if(h.containsKey(i-1)){
-                h.put(i,false);
-            }
-        }
-
-        int msp=0;
-        int ml=0;
-
-        for(int val : arr){
-            if(h.get(val)==true){
-                int tl=1;
-                int tsp=val;
-
-                while (h.containsKey(tsp+tl)){
-                    tl++;
-                 }
-                if(tl>ml){
-                    msp=tsp;
-                    ml=tl;
+    //16] Find longest consecutive subsequence
+    static int findLongestSubseq(int arr[]){
+        HashSet<Integer> hs = new HashSet<>();
+        for(int val : arr) hs.add(val);
+        int longStreak = 0;
+        for(int i=0;i<arr.length;i++){
+            if(!hs.contains(arr[i]-1)){
+                int currentNum = arr[i];
+                int currentStreak = 1;
+                while(hs.contains(currentNum+1)){
+                    currentNum+=1;
+                    currentStreak+=1;
                 }
+                longStreak = Math.max(longStreak,currentStreak);
             }
         }
-
-        for(int i=0;i<ml;i++){
-            System.out.println(msp+i);
-        }
-
+        return longStreak;
     }
 
-    //20] Largest product in subarray
-    void largetProduct(int arr[]){
+    //15] Largest product in subarray
+    static long largetProduct(int arr[],int n){
 
-        //optimize => o(n)
-        int n=arr.length;
+        // gfg
+        long minVal = arr[0];
+        long maxVal = arr[0];
 
-        if(n<0){
-            return;
-        }
+        long maxProduct = arr[0];
 
-        int res=1;
-        int min=1;
-        int max=1;
+        for (int i = 1; i < n; i++){
+            if (arr[i] < 0)
+            {
+                long temp = maxVal;
+                maxVal = minVal;
+                minVal =temp;
 
-        for(int i=0;i<n;i++){
-            if(arr[i]>0){
-                max=max*arr[i];
-                min=Math.min(arr[i]*min,1); //min always=1
-            }else if(arr[i]==0){
-                min=max=1;
-            }else {
-                min=min+max-(max=min); //swapping
-                min=min*arr[i];
-                max=Math.max(1,arr[i]*max);
             }
-            res=Math.max(max,res);
+            maxVal = Math.max(arr[i], maxVal * arr[i]);
+            minVal = Math.min(arr[i], minVal * arr[i]);
+            maxProduct = Math.max(maxProduct, maxVal);
         }
-        System.out.println("Product is: "+res);
+        return maxProduct;
 
-
+//        if(arr.length==0) return 0;
+//
+//        int res = 1, min = 1, max = 1;
+//        for(int i=0;i<arr.length;i++){
+//            if(arr[i]>0){
+//                max = max * arr[i];
+//                min = Math.min(min,1);
+//            }else if(arr[i]==0){
+//                min = max = 1;
+//            }else{
+//                min = min + max - (max=min);
+//                min = min * arr[i];
+//                max = Math.max(1, arr[i]*max);
+//            }
+//            res = Math.max(res,max);
+//        }
+//        return res;
 
         //brutforce method => o(n^2)
 
@@ -186,59 +364,15 @@ public class arrayPractice {
 
     }
 
-    //19] Largest sum in subarray
-    void largestSum(int arr[]){
-        //kadane's algorithm
-
-        int csum=arr[0];
-        int osum=arr[0];
-
-        for(int i=1;i<arr.length;i++){
-            if(csum>=0){
-                csum+=arr[i];
-            }else{
-                csum=arr[i];
-            }
-
-            if(csum>osum){
-                osum=csum;
-            }
-        }
-
-        System.out.println("Sum is: "+osum);
-
-        // Brute force
-
-//        int csum=arr[0];
-//        int msum=csum;
-//
-//        for(int i=0;i<arr.length;i++){
-//            csum=arr[i];
-//
-//            if(csum>msum){
-//                msum=csum;
-//            }
-//
-//            for(int j=i+1;i<arr.length;j++){
-//                csum=csum+arr[i];
-//                if(csum>msum){
-//                    msum=csum;
-//                }
-//            }
-//        }
-//        System.out.println("Sum is: "+msum);
-
-    }
-
-    //18] Factorial code: Linked list
-    void facorial(int n){
+    //14] Factorial code: Linked list
+    static void facorial(int n){
         Node tail = new Node(1);
         for(int i=2;i<=n;i++){
             multiply(tail,i);
         }
         print(tail);
     }
-    void multiply(Node tail,int i){
+    static void multiply(Node tail,int i){
         Node temp=tail;
         Node prevNode=tail;
         int carry=0;
@@ -257,38 +391,53 @@ public class arrayPractice {
         }
 
     }
-    void print(Node tail){
-        if(tail==null){
-            return;        }
+    static void print(Node tail){
+        if(tail==null) return;
         print(tail.prev);
         System.out.print(tail.data);
     }
 
-    //17] Subarray : sum equal to zero
-    boolean subArray(int a[]){
-        Set<Integer> h =new HashSet<>();
-        int sum =0;
+    //13] Largest sum in subarray
+    static int largestSum(int arr[]){
+        int csum = arr[0];
+        int osum = arr[0];
 
-        for(int i=0;i<a.length;i++){
-            sum+=a[i];
-            if(a[i]==0 || sum == 0 || h.contains(sum)){
-                return true;
+        for(int i=1;i<arr.length;i++){
+            if(csum>=0){
+                csum+=arr[i];
+            }else{
+                csum=arr[i];
             }
-            h.add(sum);
+
+            if(csum>osum){
+                osum = csum;
+            }
+        }
+
+        return osum;
+    }
+
+    //12] Subarray sum  == 0
+    static boolean findsumZero(int arr[],int n) {
+        Set<Integer> hs = new HashSet<Integer>();
+        int sum = 0;
+        for (int i = 0; i < arr.length; i++)
+        {
+            sum += arr[i];
+
+            if (arr[i] == 0
+                    || sum == 0
+                    || hs.contains(sum))
+                return true;
+            hs.add(sum);
         }
         return false;
     }
 
-    //16] Alternative +ve & -ve
-    void  alternative(int a[]){
-        Arrays.sort(a);
-        for(int i=0;i<a.length;i++){
-            System.out.print(a[i]+", ");
-        }
-    }
+    //11]
 
-    //15]Largest 3rd element o(n)
-    void largestThreeElements(int a[]){
+    //10] Largest 3rd element o(n)
+    static void largestThreeElements(int a[]){
         int first,second,third;
         first=second=third=0;
 
@@ -307,26 +456,29 @@ public class arrayPractice {
         System.out.println("First,second & third : "+first+" "+second+" "+third);
     }
 
-    //14]First non repeating element
-    void firstNonRepeatElement(int a[]){
-        //Try using hashMap
+    //9] First non repeating element
+    static int firstNonRepeatElement(int a[]){
+        HashMap<Integer,Integer> hm = new HashMap<>();
+
         for(int i=0;i<a.length;i++){
-            int c=0;
-            for(int j=0;j<a.length;j++){
-                if(a[i]==a[j]){
-                    c++;
-                }
-            }
-            if(c==1){
-                System.out.println(a[i]);
+            if(!hm.containsKey(a[i])){
+                hm.put(a[i],1);
+            }else{
+                int res = hm.get(a[i]);
+                hm.put(a[i],res+1);
             }
         }
 
-        // Complex: o(n^2)
+        for(int i=0;i<a.length;i++){
+            if(hm.get(a[i])==1){
+                return a[i];
+            }
+        }
+        return 0;
 
     }
 
-    //13]First repeating element
+    //8] First repeating element
     void firstRepeatElement(int a[]){
         HashSet<Integer> h = new HashSet<>();
         int c=0;
@@ -347,68 +499,105 @@ public class arrayPractice {
         }
     }
 
-    //12] Common el in 2 sorted array
-    void commonElementInArray(int a[],int b[]){
-        HashSet<Integer> h = new HashSet<>();
+    //7] Common ele in 3 sorted array
+    static ArrayList<Integer> common_element(ArrayList<Integer>v1, ArrayList<Integer>v2) {
+        ArrayList<Integer> ans = new ArrayList<>();
+        HashMap<Integer,Integer> hm = new HashMap<>();
 
-        for(int i=0;i<a.length;i++){
-            h.add(a[i]);
-        }
-
-        for(int j=0;j<b.length;j++){
-            if(h.contains(b[j])){
-                System.out.print(b[j]+", ");
+        for(Integer val : v1){
+            if(!hm.containsKey(val)){
+                hm.put(val,1);
+            }else{
+                int res = hm.get(val);
+                hm.put(val,res);
             }
         }
-    }
-
-    //11] Duplicate no in array
-    void duplicateNo(int a[]){
-        LinkedHashSet<Integer> arr = new LinkedHashSet<>();
-        for(int i=0;i<a.length;i++){
-            int c=0;
-            for(int j=0;j<a.length;j++){
-                if(a[i]==a[j]){
-                    c++;
-                    if(a[i] == a[j] && c>1){
-                        arr.add(a[i]);
-                    }
-                }
+        for(Integer val : v2){
+            if(hm.containsKey(val) && hm.get(val)>0){
+                ans.add(val);
+                hm.put(val, hm.get(val)-1);
             }
         }
-        System.out.println(arr);
-
-        //Complex: o(n^2)
+        Collections.sort(ans);
+        return ans;
     }
 
-    //10] Find disapper number
-    void findDisapperNumber(int a[]){
-        //sum formula: n(n+1)/2
-        int n = a.length+1;
-        int sumOfN = n*(n+1)/2;
-        System.out.println(sumOfN);
-        int sum =0 ;
-        for(int i=0;i<a.length;i++){
-            sum+=a[i];
-        }
-        System.out.println("Missing element: "+(sumOfN-sum));
-    }
+    //6] Quick sort
+    static void sort(int nums[],int low,int hi){
+        if(low>=hi) return;
 
-    //9] Intersection of array
-    void intersectionOfArrays(int a[],int b[]){
-        //using hashset
-        HashSet<Integer> h =new HashSet<>();
-        for(int i=0;i<a.length;i++){
-            h.add(a[i]); //hash can't take negative values
-        }
-        for(int i=0;i<b.length;i++){
-            if(h.contains(b[i])){
-                System.out.print(b[i]+", ");
+        int start = low;
+        int end = hi;
+        int mid = start + (end - start)/2;
+        int pivot = nums[mid];
+
+        while(start<=end){
+            if(nums[start]<pivot){
+                start++;
+            }
+            if(nums[end]>pivot){
+                end--;
+            }
+            if(start<=end){
+                int temp = nums[start];
+                nums[start] = nums[end];
+                nums[end] = temp;
+                start++;
+                end--;
             }
         }
+
+        //call recursion
+        sort(nums,low,end);
+        sort(nums,start,hi);
+
     }
 
-    //8] cyclic rotation by right
+    //5] Duplicate no in array
+    static List<Integer> findDuplicates(int[] nums) {
+        List<Integer> ans = new ArrayList<>();
+
+        for(int i=0;i<nums.length;i++){
+            int index = Math.abs(nums[i])-1;
+            if(nums[index]<0) ans.add(index+1);
+            nums[index] = -nums[index];
+        }
+        return ans;
+    }
+
+    //4] find pairs sum equal to given sum
+    static int pairGivenSum(int arr[],int k){
+        HashMap<Integer,Integer> m = new HashMap<>();
+        int pairs = 0;
+
+        for(int i=0;i<arr.length;i++){
+            int diff = k - arr[i];
+            if (m.containsKey(diff)) {
+                pairs += m.get(diff);
+            }
+            if(m.containsKey(arr[i])){
+                m.put(arr[i], m.get(arr[i])+1);
+            }
+            else{
+                m.put(arr[i], 1);
+            }
+        }
+        return pairs;
+
+    }
+
+    //3] 1-n sum missing element
+    static int MissingNumber(int array[], int n) {
+        int sum = (n*(n+1))/2;
+        int sum1 = 0;
+        for(int val: array){
+            sum1+=val;
+        }
+
+        return sum-sum1;
+    }
+
+    //2] cyclic rotation by right
     void cyclicRotateByRight(int a[], int n){
         int b[] =new int[a.length];
         int k=0;
@@ -432,7 +621,7 @@ public class arrayPractice {
         //Complex: o(n)
     }
 
-    //7] union of array
+    //1] union and intersection of array
     void unionOfArray(int a[],int b[]){
         //2]Using Map
         Map<Integer,Integer> mp =new HashMap<>();
@@ -446,6 +635,8 @@ public class arrayPractice {
         }
 
         System.out.println(mp.keySet()); //return key values;
+
+        // time => o(n); space => o(n+m)
 
         //A]check length 2.check same values //3.display count
 //        int count = 0;
@@ -461,6 +652,49 @@ public class arrayPractice {
 //        System.out.println("Union count: "+count);
         //complex: o(n^2)
     }
+    void intersectionOfArrays(int a[],int b[]){
+        //using hashset
+        HashSet<Integer> h =new HashSet<>();
+        for(int i=0;i<a.length;i++){
+            h.add(a[i]); //hash can't take negative values
+        }
+        for(int i=0;i<b.length;i++){
+            if(h.contains(b[i])){
+                System.out.print(b[i]+", ");
+            }
+        }
+
+        //sorting
+//        Arrays.sort(a);
+//        Arrays.sort(b);
+//        HashSet<Integer> hs = new HashSet<>();
+//        int i=0, j=0;
+//        while(i<a.length && j<b.length){
+//            if(a[i]<b[j]){
+//                i++;
+//            }else if(a[i]>b[j]){
+//                j++;
+//            }else{
+//                hs.add(a[i]);
+//                i++;
+//                j++;
+//            }
+//        }
+//
+//        int ans[] = new int[hs.size()];
+//        int k =0;
+//        for(Integer val : hs){
+//            ans[k]=val;
+//            k++;
+//        }
+//
+//        return ans;
+
+    }
+
+    // --------------- Level 2 ---------------
+
+
 
     //6] return count of repeted no
     int repeatNoInArray(int [] a,int check){

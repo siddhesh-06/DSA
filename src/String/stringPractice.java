@@ -1,44 +1,404 @@
 package String;
-
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.regex.Pattern;
 
 public class stringPractice {
     public static int t[][];
     public static void main(String args[]){
-        String a = "abc";
-        System.out.println(find_permutation(a));
+        String s ="001";
+        System.out.println(alternateBinary(s));
     }
 
-    static String sortSentence(String s){
-        String arr[] = s.split(" ");
-        String temp[] = new String[arr.length];
-        for(String w : arr){
-            int index = Integer.parseInt(w.substring(w.length()-1)) -1;
-            temp[index] = w.substring(0,w.length()-1);
-        }
-        String ans = "";
-        for(String ros : temp){
-            ans+=" "+ros;
-        }
-        return ans.substring(0,ans.length()-1);
 
+    //27] Alternate binary string
+    static int alternateBinary(String s){
+        return Math.min(check(s,'0'),check(s,'1'));
+    }
+    static int check(String s,char ch){
+        int count=0;
+        for(int i=0;i<s.length();i++){
+            if(s.charAt(i)!=ch){
+               count++;
+            }
+            ch = reverse(ch);
+        }
+        return count;
+    }
+    static char reverse(char ch){
+        return ch=='0' ? '1' : '0';
     }
 
-    //10]
-    static int findSubString( String str) {
-        int c = 0;
-        String str1 = str.toLowerCase();
-        HashMap<Integer,Character> hm = new HashMap<>();
-        for(int i=0;i<str.length();i++){
-            if(!hm.containsValue(str1.charAt(i))){
-                hm.put(i,str1.charAt(i));
-            }else{
-                c++;
+    //23] Min rotation get same string
+    static int minRoatation(String s){
+        String temp = s+s;
+        for(int i=1;i<=s.length();i++){
+            String p = temp.substring(i,i+s.length());
+
+            if(s.equals(p)){
+                return i;
             }
         }
-        return c;
+        return s.length();
+    }
+
+    //24] Second most repeated string in a sequence
+    static String secondRepeated(String arr[]){
+        HashMap<String,Integer> hm = new HashMap<>();
+        int c=1, max1=0, max2=0;
+        String ans = "";
+        for(int i=0;i<arr.length;i++){
+            if(!hm.containsKey(arr[i])){
+                hm.put(arr[i],1);
+            }else{
+                hm.put(arr[i],hm.get(arr[i])+1);
+            }
+        }
+
+        for(Map.Entry e: hm.entrySet()){
+            int val = (int) e.getValue();
+            if(val>max1){
+                max2 = max1;
+                max1=val;
+            }else if(val!=max1 && val>max2){
+                max2=val;
+            }
+        }
+
+        for(Map.Entry e: hm.entrySet()){
+            if((int) e.getValue()==max2){
+                ans+=e.getKey();
+            }
+        }
+        return ans;
+    }
+
+    //22] Word Break problem - [IMP]
+    static boolean wordBreak(ArrayList<String> dict,String s){
+        int dp[] = new int[s.length()];
+
+        for(int i=0;i<dp.length;i++){
+            for(int j=0;j<=i;j++){
+                String w2check = s.substring(j,i+1);
+                if(dict.contains(w2check)){
+                    if(j>0){
+                        dp[i] += dp[j-1];
+                    }else{
+                        dp[i] += 1;
+                    }
+                }
+            }
+        }
+
+        return dp[s.length()-1]>0;
+    }
+
+    //21] Min no of brcket reversals needed to balanced
+    static int mimNoOfReversals(String s){
+        if(s.length()%2!=0) return -1;
+        Stack<Character> st = new Stack<>();
+        int op=0,cl=0;
+        for(int i=0;i<s.length();i++){
+            char ch = s.charAt(i);
+            if(ch=='{'){
+                st.push(ch);
+                op++;
+            }else if(ch=='}' && !st.isEmpty() && st.peek()=='{'){
+                st.pop();
+                op--;
+            }else cl++;
+        }
+        if(cl%2!=0) cl = (cl/2)+1;
+        else cl=cl/2;
+
+        if(op%2!=0) op= (op/2)+1;
+        else op=op/2;
+
+        return op+cl;
+    }
+
+    //20] Min no of swaps for bracket balancing
+    static int minimumSwapForBrackets(String s){
+        int op=0,cl=0,fault=0,swap=0;
+        for(int i=0;i<s.length();i++){
+            if(s.charAt(i)==']'){
+                cl++;
+                fault = cl-op;
+            }else{
+                op++;
+                if(fault>0){
+                    swap+=fault;
+                    fault--;
+                }
+            }
+        }
+        return swap;
+    }
+
+    //19] Bracket match
+    static boolean ispar(String x){
+        Stack<Character> st = new Stack<>();
+        int i=0;
+
+        while(i<x.length()){
+            if(!st.isEmpty()){
+                switch(x.charAt(i)){
+                    case '}':
+                        if(st.peek()=='{'){
+                            st.pop();
+                        }else{
+                            st.push(x.charAt(i));
+                        }
+                        break;
+                    case ')':
+                        if(st.peek()=='('){
+                            st.pop();
+                        }else{
+                            st.push(x.charAt(i));
+                        }
+                        break;
+                    case ']':
+                        if(st.peek()=='['){
+                            st.pop();
+                        }else{
+                            st.push(x.charAt(i));
+                        }
+                        break;
+                    default:
+                        st.push(x.charAt(i));
+                }
+            }else{
+                st.push(x.charAt(i));
+            }
+            i++;
+        }
+
+        if(st.isEmpty()){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+    //18] Convert mobile no to keypad
+    static String numberToKeypad(String s){
+        String str[] = {"2","22","222",
+                "3","33","333",
+                "4","44","444",
+                "5","55","555",
+                "6","66","666",
+                "7","77","777","7777",
+                "8","88","888",
+                "9","99","999","9999"
+        };
+
+        int n = s.length();
+        String op = "";
+        for(int i=0;i<n;i++){
+            if(s.charAt(i)== ' '){
+                op+="0";
+            }else{
+                int pt = s.charAt(i) - 'A';
+                op += str[pt];
+
+            }
+        }
+        return op;
+    }
+
+    //17] All expresions conversion
+    static String prefixToInfix(String s){
+        Stack<String> st = new Stack<>();
+        for(int i=s.length()-1;i>=0;i--){
+            if(checkOperator(s.charAt(i))){
+                String ch1 = st.pop();
+                String ch2 = st.pop();
+                String temp = "("+ch1+s.charAt(i)+ch2+")";
+                st.push(temp);
+            }else{
+                st.push(s.charAt(i)+"");
+            }
+        }
+        String ans = st.peek();
+        return ans;
+    }
+    static boolean checkOperator(char c){
+        switch (c){
+            case '+':
+            case '-':
+            case '*':
+            case '/':
+            case '%':
+                return true;
+        }
+        return false;
+    }
+
+    //16] Next permutation
+    static void nextPermutation(int[] nums) {
+        // 13542
+        int n = nums.length;
+
+        int i = n-2;
+        while(i>=0 && nums[i]>=nums[i+1]) i--;
+        if(i>=0){ //checking is there any break point
+            int j = n-1;
+            while(nums[j]<=nums[i]){
+                j--;
+            }
+            swap(nums,i,j);
+        }
+        // if no then only reverse array beacuase given array should be last permutation
+        reverse(nums,i+1,n-1);
+    }
+    static void swap(int arr[], int i,int j){
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+    static void reverse(int arr[],int i,int j){
+        while(i<j){
+            swap(arr,i,j);
+            i++;
+            j--;
+        }
+    }
+
+    //15] EDIT distance
+    static int editDistance(String s, String t) {
+        int m = s.length();
+        int n = t.length();
+        return dpSolve(s,t,m,n);
+    }
+    static int dpSolve(String s,String t,int m,int n){
+        int dp[][] = new int[m+1][n+1];
+
+        for(int i=0;i<=m;i++){
+            for(int j=0;j<=n;j++){
+                if(i==0) dp[i][j] = j;
+                else if(j==0) dp[i][j] = i;
+                else if(s.charAt(i-1)==t.charAt(j-1)){
+                    dp[i][j] = dp[i-1][j-1];
+                }else{
+                    int temp = Math.min(dp[i-1][j],dp[i][j-1]); //Insert Delete
+                    dp[i][j] = 1 + Math.min(temp,dp[i-1][j-1]); //Replace
+                }
+            }
+        }
+
+        return dp[m][n];
+    }
+
+    //12] Longest common subsequence
+    static int lcm(String s1,String s2){
+        int m = s1.length();
+        int n = s2.length();
+
+        // Initialize dp
+        int t[][] = new int[m+1][n+1];
+        for(int i=0;i<m+1;i++){
+            for(int j=0;j<n+1;j++){
+                if(i==0 || j==0) t[i][j] = 0;
+            }
+        }
+
+        //Perform logic
+        for(int i=1;i<m+1;i++){
+            for(int j=1;j<n+1;j++){
+                if(s1.charAt(i-1)==s2.charAt(j-1)){
+                    t[i][j] = 1 + t[i-1][j-1];
+                }else{
+                    t[i][j] = Math.max(t[i-1][j],t[i][j-1]);
+                }
+            }
+        }
+
+        return t[m][n];
+    }
+
+    //11] Number of Substrings with count of each character as “K”
+    static int longestSubstring_K(String s,int k){
+        int i = 0,j=0;
+        HashMap<Character,Integer> hm = new HashMap<>();
+        int min = Integer.MAX_VALUE;
+
+        while (j<s.length()){
+            if(!hm.containsKey(s.charAt(j))){
+                hm.put(s.charAt(j),1);
+            }else{
+                hm.put(s.charAt(j),hm.get(s.charAt(j))+1);
+            }
+            if(hm.size()<k){
+                j++;
+            }else if(hm.size()==k){
+                min = Math.min(min,j-i+1);  //window size => j-i+1
+                j++;
+            }else if(hm.size()>k){
+                while (hm.size()>k){
+                    hm.put(s.charAt(i),hm.get(s.charAt(i))-1);
+                    if(hm.get(s.charAt(i))==0){
+                        hm.remove(s.charAt(i));
+                    }
+                    i++;
+                }
+                j++;
+            }
+        }
+
+        return min;
+    }
+
+    //10] Smallest window that contains all chars
+    static int smallWindow_distinct(String s){
+        HashSet<Character> hs = new HashSet<>();
+        for(char c : s.toCharArray()) hs.add(c);
+        int k = hs.size();
+        HashMap<Character,Integer> hm = new HashMap<>();
+        int min = Integer.MAX_VALUE;
+        hm.put(s.charAt(0),1);
+        int i=0,j=1,c=0;
+        c++;
+
+        while (i<=j && j<s.length()){
+            if(c<k){
+                if(!hm.containsKey(s.charAt(j))){
+                    c++;
+                    hm.put(s.charAt(j),1);
+                }else{
+                    hm.put(s.charAt(j),hm.get(s.charAt(j))+1);
+                }
+                j++;
+            }else if(c==k){
+                min = Math.min(min,j-i);
+                if(hm.get(s.charAt(i))==1) c--;
+                hm.put(s.charAt(i),hm.get(s.charAt(i))-1);
+                i++;
+            }
+        }
+        while(c==k){
+            min = Math.min(min,j-i);
+            if(hm.get(s.charAt(i))==1) c--;
+            hm.put(s.charAt(i),hm.get(i)-1);
+            i++;
+        }
+
+        return min;
+    }
+
+    //9] Rearrange char in str that no 2 adj are same
+    static int checkAdjacentChar(String s){
+        int max = Integer.MIN_VALUE;
+        HashMap<Character,Integer> hm = new HashMap<>();
+        for(int i=0;i<s.length();i++){
+            if(!hm.containsKey(s.charAt(i))){
+                hm.put(s.charAt(i),1);
+            }else{
+                hm.put(s.charAt(i),hm.get(s.charAt(i))+1);
+            }
+            max = Math.max(max,hm.get(s.charAt(i)));
+        }
+
+        if(max<=s.length()-max+1) return 1;
+        else return 0;
     }
 
     //8] Split the Binary string into two substring with equal 0’s and 1’s.
@@ -47,13 +407,13 @@ public class stringPractice {
 
         for(int i=0;i<s.length();i++){
             if(s.charAt(i)=='0'){
-                c0++;
+                c0++; // 0 => count
             }else{
-                c1++;
+                c1++; // 1 => count
             }
 
             if(c0==c1){
-                c++;
+                c++;  // when both are equals
             }
         }
 
@@ -90,8 +450,14 @@ public class stringPractice {
             ans.add(ds);
             return;
         }
-        solveSubsequence(str.substring(1),ds+str.charAt(0),ans);
-        solveSubsequence(str.substring(1),ds,ans);
+        char ch = str.charAt(0);
+        String ros = str.substring(1);
+
+        // if char add
+        solveSubsequence(ros,ds+ch,ans);
+
+        // if not
+        solveSubsequence(ros,ds,ans);
     }
 
     //5] Longest Repeating Subsequence
@@ -130,47 +496,65 @@ public class stringPractice {
     }
 
     //4] Longest palindrome => odd-even method
-    static String longestPalin(String S){
-        if(S==null || S.length()<1) return "";
+    static String longestPalindrome(String s){
+        int start=0,end=0;
 
-        int start =0 ,end=0;
-        for(int i=0;i<S.length();i++){
-            int len1 = expandFromMiddle(S,i,i);
-            int len2 = expandFromMiddle(S,i,i+1);
-            int len = Math.max(len1,len2);
-            if(len > end - start){
-                start = i - (len-1)/2;
-                end = i + (len/2);
+        for(int i=0;i<s.length();i++){
+            int even = expandFromCenter(s,i,i+1);
+            int odd = expandFromCenter(s,i,i);
+            int len = Math.max(even,odd);
+
+            if(end-start<len){
+                start = i -(len-1)/2;
+                end = i +len/2;
             }
         }
-        return S.substring(start,end+1);
-    }
-    static int expandFromMiddle(String s,int left,int right){
-        if(s==null || left>right) return 0;
 
-        while(left>=0 && right<s.length() && s.charAt(left)==s.charAt(right)){
-            left--;
-            right++;
+        return s.substring(start,end+1);
+    }
+    static int expandFromCenter(String s,int i,int j){
+        while(i>=0 && j<s.length() && s.charAt(i)==s.charAt(j)){
+            i--;
+            j++;
         }
-        return right - left - 1; // index of that pt
+
+        return j-i-1;
+    }
+
+    //3] Valid shuffle or not
+    static boolean isValidSuffle(String a,String b,String c){
+        int i=0, j=0, k=0;
+
+        while(k<c.length()){
+            if(i<a.length() && a.charAt(i)==c.charAt(k)){
+                i++;
+            }else if(j<b.length() && b.charAt(j)==c.charAt(k)){
+                j++;
+            }else{
+               return false;
+            }
+            k++;
+        }
+        return true;
     }
 
     //2] Remove duplicate Char
     public static void removeDup(String a){
 
         // Here we dont use HashSet because it can't maintain order of elements.
-        // but, LinkedHashSet should maintain the order of elements.
+        // but, LinkedHashSet will maintain the order of elements.
+        // HashSet arrange according to acci value of that char
 
         LinkedHashSet<Character> h =new LinkedHashSet<>();
 
         for(int i=0;i<a.length();i++){
             h.add(a.charAt(i));
         }
-        StringBuilder temp= new StringBuilder();
+        String temp = "";
         for(char i: h){
-            temp.append(i);
-            System.out.print(i);
+            temp+=i;
         }
+        System.out.println(temp);
 
         //Use iterator to print all elements in HashSet
 //        Iterator I = h.iterator();
@@ -204,12 +588,8 @@ public class stringPractice {
         return reverse;
     }
 
-    public void chef(int n){
-
-    }
-
     //11] Reverse string using stack
-    public void reverseStringUsingStack(String s){
+    static void reverseStringUsingStack(String s){
         int l = s.length();
         Stack<Character> st=new Stack<>();
         for(int i =0;i<l;i++){
@@ -230,8 +610,7 @@ public class stringPractice {
         return s.length()>n? aCounter(s, rest)
                 : numOfS*aCounter(s, s.length()) + aCounter(s, rest);
     }
-
-    private static long aCounter(String s, long end) {
+    static long aCounter(String s, long end) {
         int a=0;
         for (int i = 0; i < end; i++) {
             if (s.charAt(i) == 'a') a++;
@@ -240,7 +619,7 @@ public class stringPractice {
     }
 
     //8] Remove duplicate word
-    void removeDuplicate(String str){
+    static void removeDuplicate(String str){
         HashSet<Character> h = new HashSet<>();
         int l = str.length();
         char strArray[] = str.toCharArray();
@@ -255,7 +634,7 @@ public class stringPractice {
     }
 
     //7] Palindrome
-    boolean palindrome(String str){
+    static boolean palindrome(String str){
         int i=0,j=str.length()-1;
         while(i<j){
             if(str.charAt(i)!= str.charAt(j)){
@@ -268,7 +647,7 @@ public class stringPractice {
     }
 
     //6] String reverse by word
-    void reverseByWord(String str){
+    static void reverseByWord(String str){
         //Complex: o(n)
         Stack<Character> st=new Stack<Character>();
         for (int i = 0; i < str.length(); i++) {
@@ -327,7 +706,7 @@ public class stringPractice {
     }
 
     //4] Anagram string
-    boolean anagramStr(String a,String b){
+    static boolean anagramStr(String a,String b){
         //A] Complex: o(nlon(n)+n) => o(n)
         if(a.length()!=b.length()) return false;
 
@@ -344,7 +723,7 @@ public class stringPractice {
     }
 
     //3] Duplicate characters
-    void duplicateChar(String a){
+    static void duplicateChar(String a){
         //Complex: o(n^2)
         char b[]=a.toCharArray();
         System.out.print("Duplicate char are: ");
@@ -358,14 +737,14 @@ public class stringPractice {
     }
 
     //2] Remove white spaces in array
-    String removeWhiteSpace(String a){
+    static String removeWhiteSpace(String a){
         //Complex: o(n)
         a=a.replace(" ","");
         return a;
     }
 
     //1] Find no of char in string
-    void noOfEachChar(String a){
+    static void noOfEachChar(String a){
         //Complex: o(n^2)
         char check;
         int i=0;

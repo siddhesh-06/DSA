@@ -7,6 +7,7 @@ public class recursionPractice {
     static int dj[] = {0,-1,0,1};
 
     public static void main(String args[]){
+        System.out.println(getSubseq("abc"));
     }
 
     // 25] Permutation - 2
@@ -416,7 +417,7 @@ public class recursionPractice {
         ArrayList<String> rres = getKeypadCombi(ros);
 
         ArrayList<String>  mres = new ArrayList<>();
-        String codeforch = codes[Integer.parseInt(String.valueOf(ch))]; // ch-'0'
+        String codeforch = codes[ch-'0']; // ch-'0'
         for(int i=0;i<codeforch.length();i++){
 //            char chcode = codeforch.charAt(i);
             for(String rstr:rres){

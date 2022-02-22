@@ -1,4 +1,4 @@
-package DP;
+package DP.Knapsack;
 
 import Algorithm.knapsackRecursive;
 // 3 types  :

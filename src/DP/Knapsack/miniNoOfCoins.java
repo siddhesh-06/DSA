@@ -1,4 +1,4 @@
-package DP;
+package DP.Knapsack;
 
 public class miniNoOfCoins {
     static int t[][];

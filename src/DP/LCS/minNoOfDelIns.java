@@ -16,8 +16,8 @@ public class minNoOfDelIns {
     }
 
     public static void main(String args[]){
-        String x="heap";
-        String y="pea";
+        String x="ecfbefdcfca";
+        String y="badfcbebbf";
 
         int m= x.length();
         int n= y.length();

@@ -39,9 +39,9 @@ public class printLcSequence {
                 }
             }
         }
-//        return t[m][n];
-        String ans="";
 
+//      return t[m][n];
+        String ans="";
         int i=m,j=n;
         while(i>0 && j>0){
             if(x.charAt(i-1) == y.charAt(j-1)){
@@ -56,6 +56,7 @@ public class printLcSequence {
                 }
             }
         }
+
         // Reverse the string
         Stack <Character> s = new Stack<>();
         String temp="";
@@ -66,7 +67,5 @@ public class printLcSequence {
             temp=temp+s.pop();
         }
         return temp;
-
-
     }
 }

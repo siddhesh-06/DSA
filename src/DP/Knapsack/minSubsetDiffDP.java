@@ -1,6 +1,4 @@
-package DP;
-
-import java.util.ArrayList;
+package DP.Knapsack;
 
 public class minSubsetDiffDP {
 

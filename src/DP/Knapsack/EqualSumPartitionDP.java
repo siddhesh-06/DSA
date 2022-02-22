@@ -1,4 +1,4 @@
-package DP;
+package DP.Knapsack;
 
 public class EqualSumPartitionDP {
     static boolean t[][];
