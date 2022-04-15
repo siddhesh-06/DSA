@@ -13,6 +13,7 @@ public class memoLCS {
         }
     }
 
+    // longest common subsequence
     public static void main(String args[]){
         String x="abcdgh";
         String y="abedfhr";

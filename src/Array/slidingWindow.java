@@ -1,50 +1,171 @@
 package Array;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class slidingWindow {
-    public static void main(String args[]){
-//        Identification =>
-//            1)Array,String
-//            2)Subarray,Substring
-//            3)Kth no => window size :
-//                               1)Fixed 2)Variable
-//            4)Longest,Smallest
-        int arr[] = {12, -1, -7, 8, -15, 30, 16, 28};
-        negNumbersInWindow_K(arr,3);
+    public static void main(String args[]) throws IOException{
+
+        System.out.println(longestWithoutRepeat("pwwkew"));
 
     }
 
-    //4] Count of anagrams
-    static void countAnagram(String s,String ptr){
-        int l=0, r=0;
-        HashMap<Character,Integer> hm = new HashMap<>();
-        for(int i=0;i<ptr.length();i++){
-            if(!hm.containsKey(ptr.charAt(i))){
-                hm.put(ptr.charAt(i),1);
+    // 7] Longest substring without repeating characters
+    static int longestWithoutRepeat(String s){
+        HashSet<Character> hs = new HashSet<>();
+        if(s.length()==0) return 0;
+
+        int i = 0, j = 0, ans = 0;
+        while(j<s.length()){
+            if(!hs.contains(s.charAt(j))){
+                hs.add(s.charAt(j));
+                ans = Math.max(ans, hs.size());
+                j++;
             }else{
-                hm.put(ptr.charAt(i),hm.get(ptr.charAt(i))+1);
+                hs.remove(s.charAt(i++));
             }
         }
-        int count = hm.size();
-        int k =count;
-        while(r<s.length()){
-            if(hm.containsKey(s.charAt(r))){
-                hm.put(s.charAt(r),hm.get(s.charAt(r))-1);
-            }
-            if(hm.get(s.charAt(r))==0){
-                count--;
-            }
-
-            if(r-l+1 < k){
-                r++;
-            }else if(r-l+1 == k){
-
-            }
-        }
+        return ans;
     }
 
-    //3] Fisrt -ve no in every window of k
+    // 6] Longest substring with k unique char
+    static int longestUnique(String s, int key){
+        HashMap<Character, Integer> hm = new HashMap<>();
+        int i =0, j = 0;
+        int ans = 0;
+        while (j<s.length()){
+            char ch = s.charAt(j);
+            if(!hm.containsKey(ch)){
+                hm.put(ch, 1);
+            }else{
+                hm.put(ch, hm.get(ch)+1);
+            }
+
+            if(hm.size()<key){
+                j++;
+            }else if(hm.size()==key){
+                ans = Math.max(ans, j-i+1);
+                j++;
+            }else if(hm.size()>key){
+                char rm = s.charAt(i);
+                while (hm.size()>key){
+                    hm.put(rm, hm.get(rm)-1);
+                    if(hm.get(rm)==0) hm.remove(rm);
+                    i++;
+                }
+                j++;
+            }
+        }
+        return ans;
+    }
+
+    //5] Longest subarray of sum = k
+    static int longestSubarrayOf_K(int arr[],int k){
+        int i=0,j=0;
+        int sum=0,max=0;
+
+        while (j<arr.length){
+            sum+=arr[j];
+            if(sum<k){
+                j++;
+            }else if(sum==k){
+                max = Math.max(max,j-i+1);
+                j++;
+            }else if(sum>k){
+                while (sum>k){
+                    sum=sum-arr[i];
+                    i++;
+                }
+                j++;
+            }
+        }
+        return max;
+    }
+
+    //4] Maximun of all subarray
+    static ArrayList<Integer> maxSubarray(int arr[], int k){
+        ArrayList<Integer> ans = new ArrayList<>();
+        if(k>arr.length){
+            int max = Integer.MIN_VALUE;
+            for(int i : arr){
+                max = Math.max(i,max);
+            }
+            ans.add(max);
+            return ans;
+        }
+        Queue<Integer> q = new LinkedList<>();
+
+        int i=0,j=0;
+
+        while (j<arr.length){
+            while (q.size()>0 && arr[j]>q.peek()){
+                q.remove();
+            }
+            q.add(arr[j]);
+            if(j-i+1 <k){
+                j++;
+            }else if(j-i+1 == k){
+                ans.add(q.peek());
+                if(q.peek()==arr[i]){
+                    q.poll();
+                }
+                i++;
+                j++;
+            }
+        }
+        return ans;
+    }
+
+    //3] Count of anagrams
+    static int countAnagram(String s,String ptr){
+        int i=0, j=0;
+        int k = ptr.length();
+        HashMap<Character,Integer> hm = new HashMap<>();
+        List<Integer> ans1 = new ArrayList<>();
+        // Map for => Pattern
+        for(int p=0;p<ptr.length();p++){
+            if(!hm.containsKey(ptr.charAt(p))){
+                hm.put(ptr.charAt(p),1);
+            }else{
+                hm.put(ptr.charAt(p),hm.get(ptr.charAt(p))+1);
+            }
+        }
+
+        int count = hm.size();
+        int ans=0;
+
+        while (j<s.length()){
+            char ch = s.charAt(j);
+            if(hm.containsKey(ch)) {
+                hm.put(ch,hm.get(ch)-1);
+                if(hm.get(ch)==0) count--;
+            }
+
+            if(j-i+1 <k){
+
+                j++;
+            }else if(j-i+1 ==k){
+                if(count==0){
+                    ans++;
+                    ans1.add(i);
+                }
+                char eli = s.charAt(i);
+                if(hm.containsKey(eli)){
+                    hm.put(eli,hm.get(eli)+1);
+                    if(hm.get(eli)==1){
+                        count++;
+                    }
+                }
+                i++;
+                j++;
+            }
+        }
+
+        return ans;
+    }
+
+    //2] First -ve no in every window of k
     static void negNumbersInWindow_K(int arr[],int k){
         int i=0,j=0;
         ArrayList<Integer> ans = new ArrayList<>();
@@ -72,29 +193,6 @@ public class slidingWindow {
 
     }
 
-    //2] Longest subarray of sum = k
-    static int longestSubarrayOf_K(int arr[],int k){
-        int i=0,j=0;
-        int sum=0,max=0;
-
-        while (j<arr.length){
-            sum+=arr[j];
-            if(sum<k){
-                j++;
-            }else if(sum==k){
-                max = Math.max(max,j-i+1);
-                j++;
-            }else if(sum>k){
-                while (sum>k){
-                    sum=sum-arr[i];
-                    i++;
-                }
-                j++;
-            }
-        }
-        return max;
-    }
-
     //1] Max sum subarray of size K
     static int maxSubarray_K(int arr[],int k){
         int i=0,j=0;
@@ -115,4 +213,5 @@ public class slidingWindow {
 
         return max;
     }
+
 }

@@ -12,6 +12,7 @@ public class longestCommonSubsequece {
 
     }
 
+    //without memo
     static int lcs(String x,String y,int n,int m){
         if(n==0 || m==0) return 0;
 

@@ -58,13 +58,9 @@ public class printLcSequence {
         }
 
         // Reverse the string
-        Stack <Character> s = new Stack<>();
         String temp="";
-        for(int k=0;k<ans.length();k++){
-            s.push(ans.charAt(k));
-        }
-        for(int k=0;k<ans.length();k++){
-            temp=temp+s.pop();
+        for(int k=ans.length()-1;k>=0;k--){
+            temp += ans.charAt(k);
         }
         return temp;
     }

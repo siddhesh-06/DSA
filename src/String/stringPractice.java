@@ -4,10 +4,55 @@ import java.util.*;
 public class stringPractice {
     public static int t[][];
     public static void main(String args[]){
-        String s ="001";
-        System.out.println(alternateBinary(s));
+        char mat[][]= {
+            {'D','D','D','G','D','D'},
+            {'B','B','D','E','B','S'},
+            {'B','S','K','E','B','K'},
+            {'D','D','D','D','D','E'},
+            {'D','D','D','D','D','E'},
+            {'D','D','D','D','D','G'}
+        };
+
+//      System.out.println(countPalindromicSub("aaa"));
+        System.out.println(smallWindow_distinct("AABBBCBBAC"));
     }
 
+    //28] Find count of word in matrix
+    static int countOfWordInMatrixT(char mat[][],String s){
+        int ans = 0;
+        int n = s.length();
+        ArrayList<ArrayList<Integer>> st = new ArrayList<>();
+        for(int i=0;i<mat.length;i++){
+            for(int j=0;j<mat[0].length;j++){
+                ans += checkMatrix(mat,i,j,s,n,0,st);
+            }
+        }
+
+        return ans;
+    }
+    static int checkMatrix(char[][] mat, int i, int j, String s, int n, int idx,ArrayList<ArrayList<Integer>> ds) {
+        int found = 0;
+        if(i>=0 && j>=0 && i<mat.length && j<mat[0].length && s.charAt(idx)==mat[i][j]){
+            char st = s.charAt(idx);
+            mat[i][j] = 0;
+            idx=idx+1;
+            if(idx==n){
+                found=1;
+                ArrayList<Integer> temp = new ArrayList<>();
+                temp.add(i);
+                temp.add(j);
+                ds.add(temp);
+            }
+            else{
+                found += checkMatrix(mat,i+1,j,s,n,idx,ds);
+                found += checkMatrix(mat,i-1,j,s,n,idx,ds);
+                found += checkMatrix(mat,i,j+1,s,n,idx,ds);
+                found += checkMatrix(mat,i,j-1,s,n,idx,ds);
+            }
+            mat[i][j] = st;
+        }
+        return found;
+    }
 
     //27] Alternate binary string
     static int alternateBinary(String s){
@@ -27,17 +72,27 @@ public class stringPractice {
         return ch=='0' ? '1' : '0';
     }
 
-    //23] Min rotation get same string
-    static int minRoatation(String s){
-        String temp = s+s;
-        for(int i=1;i<=s.length();i++){
-            String p = temp.substring(i,i+s.length());
+    //26] Count all palidromic subsequence
+    static int countPalindromicSub(String s){
+        int dp[][] = new int[s.length()][s.length()];
 
-            if(s.equals(p)){
-                return i;
+        for(int g=0;g<s.length();g++){
+            for(int i=0,j=g;j<s.length();i++,j++){
+                if(g==0){
+                    dp[i][j] = 1;
+                }else if(g==1){
+                    dp[i][j] = s.charAt(i)==s.charAt(j) ? 3 : 2;
+                }else{
+                    if(s.charAt(i)==s.charAt(j)){
+                        dp[i][j] = dp[i][j-1] + dp[i+1][j] + 1;
+                    }else{
+                        dp[i][j] = dp[i][j-1] + dp[i+1][j] - dp[i+1][j-1];
+                    }
+                }
             }
         }
-        return s.length();
+
+        return dp[0][s.length()-1];
     }
 
     //24] Second most repeated string in a sequence
@@ -69,6 +124,19 @@ public class stringPractice {
             }
         }
         return ans;
+    }
+
+    //23] Min rotation get same string
+    static int minRoatation(String s){
+        String temp = s+s;
+        for(int i=1;i<=s.length();i++){
+            String p = temp.substring(i,i+s.length());
+
+            if(s.equals(p)){
+                return i;
+            }
+        }
+        return s.length();
     }
 
     //22] Word Break problem - [IMP]
@@ -288,6 +356,33 @@ public class stringPractice {
         return dp[m][n];
     }
 
+    //14] All possible IP addresses
+    static ArrayList<String> getAllValidIP(String s){
+        ArrayList<String> ans = new ArrayList<>();
+        helper(s,0,0,"",ans);
+        return ans;
+    }
+    static void helper(String s,int i,int par,String ds,ArrayList<String> ans){
+        if(i==s.length() || par==4){
+            if(i==s.length() && par==4){
+                ans.add(ds.substring(0,ds.length()-1));
+            }
+            return;
+        }
+        helper(s,i+1,par+1,ds+s.charAt(i),ans);
+
+        if(i+2<=s.length() && isValid(s.substring(i,i+2)))
+            helper(s,i+2,par+1,ds+s.substring(i,i+2)+".",ans);
+
+        if(i+3<=s.length() && isValid(s.substring(i,i+3)))
+            helper(s,i+3,par+1,ds+s.substring(i,i+3)+".",ans);
+    }
+    static boolean isValid(String s){
+        if(s.charAt(0)=='0') return false;
+        int num = Integer.parseInt(s);
+        return  num<=255;
+    }
+
     //12] Longest common subsequence
     static int lcm(String s1,String s2){
         int m = s1.length();
@@ -352,6 +447,7 @@ public class stringPractice {
         HashSet<Character> hs = new HashSet<>();
         for(char c : s.toCharArray()) hs.add(c);
         int k = hs.size();
+
         HashMap<Character,Integer> hm = new HashMap<>();
         int min = Integer.MAX_VALUE;
         hm.put(s.charAt(0),1);

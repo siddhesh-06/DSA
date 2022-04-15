@@ -35,7 +35,6 @@ public class minSubsetDiffDP {
     }
 
     public int subSet(int arr[],int sum){
-
         //Set Matrix
         for(int i=1;i<arr.length+1;i++){
             for(int j=1;j<sum+1;j++){
@@ -47,6 +46,7 @@ public class minSubsetDiffDP {
             }
         }
 
+
         int min=Integer.MAX_VALUE;
         for(int i=0;i<(sum+1)/2;i++){
             if(t[arr.length][i]==true){
@@ -55,9 +55,5 @@ public class minSubsetDiffDP {
         }
 
         return min;
-
-
     }
-
-
 }

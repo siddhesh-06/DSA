@@ -238,7 +238,7 @@ public class binarySearch {
         return letters[res];
     }
 
-    // 10] Find ceil od element in sorted array
+    // 10] Find ceil element in sorted array
     static int ceilElement(int arr[],int k){
         int s = 0;
         int e = arr.length-1;
@@ -258,9 +258,9 @@ public class binarySearch {
         return res;
     }
 
-    // 9] Find floor od element in sorted array
+    // 9] Find floor element in sorted array
     static int floorElement(int arr[],int k){
-        // 7.5 => 7 is floor and 8 is ceil
+        // 7.5 => 7 is floor(less) and 8 is ceil(greater)
         int s = 0;
         int e = arr.length-1;
         int res = -1;
@@ -286,10 +286,12 @@ public class binarySearch {
 
         while(s<=e){
             int mid = s + (e-s)/2;
+            // check 3 possiblities
             if(arr[mid]==k) return mid;
             if(mid-1>=s && arr[mid-1]==k) return mid-1;
             if(mid+1<=e && arr[mid+1]==k) return mid+1;
 
+            //change start nd end by 2
             if(k<arr[mid]){
                 e = mid -2;
             }else if(k>arr[mid]){

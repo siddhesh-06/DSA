@@ -16,8 +16,9 @@ public class shotestCommonSuperSeq {
 
     }
     public static void main(String args[]){
-        String x="AGGTAB";
-        String y="GXTXAYB";
+        String x="geek";
+        String y="eke";
+        // ans = geeke = 5 length
 
         int m=x.length();
         int n=y.length();

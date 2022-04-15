@@ -23,9 +23,93 @@ public class arrayPractice {
                 {5, 6, 7, 8},
                 {9, 10, 11, 12},
                 {13, 14, 15,16}};
-        int arr[] = {1, 3, 5, 8, 9, 2, 6, 7, 6, 8, 9};
-        System.out.println(minNoOfJumps(arr));
+
+        List<Integer> arr = new ArrayList<>();
+
+        arr.add(8);
+        arr.add(7);
+        arr.add(0,9);
+        System.out.println(arr);
     }
+    static String longestPalindrome(String s){
+        int start=0,end=0;
+
+        for(int i=0;i<s.length();i++){
+            int even = expandFromCenter(s,i,i+1);
+            int odd = expandFromCenter(s,i,i);
+            int len = Math.max(even,odd);
+
+            if(end-start<len){
+                start = i -(len-1)/2;
+                end = i +len/2;
+            }
+        }
+
+        return s.substring(start,end+1);
+    }
+
+    static int expandFromCenter(String s,int i,int j){
+        while(i>=0 && j<s.length() && s.charAt(i)==s.charAt(j)){
+            i--;
+            j++;
+        }
+
+        return j-i-1;
+    }
+
+    static int solveBinary(String s,int x,int y){
+        char ch[] = s.toCharArray();
+        if(x>y){
+            sort1(ch);
+        }else{
+            sort0(ch);
+        }
+        int ans = (find_01(ch)*x) + (find_10(ch)*y);
+        return ans;
+    }
+    static void sort0(char s[]){
+        int j = -1;
+        for(int i=0;i<s.length;i++){
+            if(s[i]=='0'){
+                j++;
+                char temp = s[i];
+                s[i] = s[j];
+                s[j] = temp;
+            }
+        }
+    }
+    static void sort1(char s[]){
+        int j = -1;
+        for(int i=0;i<s.length;i++){
+            if(s[i]=='1'){
+                j++;
+                char temp = s[i];
+                s[i] = s[j];
+                s[j] = temp;
+            }
+        }
+    }
+    static int find_01(char s[]){
+        int temp = 0;
+        for(int i=0;i<s.length-1;i++){
+            if(s[i]=='0' && s[i+1]=='1'){
+                temp++;
+                i++;
+            }
+        }
+        return temp;
+    }
+    static int find_10(char s[]){
+        int temp = 0;
+        for(int i=0;i<s.length-1;i++){
+            if(s[i]=='1' && s[i+1]=='0'){
+                temp++;
+                i++;
+            }
+        }
+        return temp;
+    }
+
 
 
     //29] A1[] is subset of A2[]

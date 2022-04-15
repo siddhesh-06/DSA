@@ -9,9 +9,10 @@ public class countSubSetDiffEqualToGivenSum {
     }
 
     public static void main(String args[]){
+        //Input
         int arr[]={1,1,2,3};
-
         int diff = 1;
+
         int arrSum = 0;
         // {1,1,2} - {3} => 1
         // {1,3} - {2,1} => 1
