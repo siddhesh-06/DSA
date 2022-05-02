@@ -1,8 +1,37 @@
 package BST;
 
-import kotlin.Pair;
-
+import javax.swing.tree.TreeNode;
 import java.util.*;
+
+class bstIterator{
+    public Stack<treeNode> s = new Stack<>();
+    boolean reverse = false;
+
+    bstIterator(treeNode root, boolean isReverse){
+        pushAll(root);
+        reverse = isReverse;
+    }
+
+    public boolean hasnext(){
+        return !s.isEmpty();
+    }
+
+    public int next(){
+        treeNode temp = s.pop();
+        if(reverse) pushAll(temp.leftNode);
+        else pushAll(temp.rightNode);
+        return temp.data;
+    }
+
+    public void pushAll(treeNode root){
+        while(root!=null){
+            s.push(root);
+            if(reverse==false) root = root.leftNode;
+            else root = root.rightNode;
+        }
+    }
+
+}
 
 class treeNode{
     int data;
@@ -34,12 +63,12 @@ class pair{
 
 class bst extends treeNode{
     treeNode root,loc,par;
+    treeNode first, prev, mid, last;
 
     //methods
     public void insert(int info){
         treeNode newNode = new treeNode();
         newNode.data=info;
-
         if(root==null){
             root=newNode;
             rightNode=null;
@@ -739,6 +768,369 @@ class bst extends treeNode{
         root.rightNode = buildTree2(in,inroot+1,inE,post,postS+leftNums,postE-1,hm);
         return root;
     }
+
+    // serialize and deserialize the BT
+    static String serializeBT(treeNode root){
+        if(root==null) return "";
+        StringBuilder res = new StringBuilder();
+        Queue<treeNode> q = new LinkedList<>();
+        q.offer(root);
+
+        while (!q.isEmpty()){
+            treeNode node = q.poll();
+            if(node==null){
+                res.append("n ");
+                continue;
+            }
+            res.append(node.data+" ");
+            q.offer(node.leftNode);
+            q.offer(node.rightNode);
+        }
+        return res.toString();
+    }
+    static treeNode deserializeBT(String s){
+        if(s=="") return null;
+        Queue<treeNode> q = new LinkedList<>();
+        String res[] = s.split(" ");
+        treeNode root = new treeNode(Integer.parseInt(res[0]));
+        q.offer(root);
+
+        for(int i=1;i<res.length;i++){
+            treeNode node = q.poll();
+            if(!res[i].equals("n")){
+                treeNode left = new treeNode(Integer.parseInt(res[i]));
+                node.leftNode = left;
+                q.offer(left);
+            }
+            if(!res[++i].equals("n")){
+                treeNode right = new treeNode(Integer.parseInt(res[i]));
+                node.rightNode = right;
+                q.offer(right);
+            }
+        }
+
+        return root;
+    }
+
+    // Morris Traversal => o(T) : o(n) & o(S) : o(1)
+    static ArrayList<Integer> morrisTraversalInorder(treeNode root){
+        ArrayList<Integer> inorder = new ArrayList<>();
+        treeNode curr = root;
+        while (curr!=null){
+            if(curr.leftNode==null){
+                inorder.add(curr.data);
+                curr = curr.rightNode;
+            }else{
+                treeNode prev = curr.leftNode;
+                while (prev.rightNode!=null && prev.rightNode!=curr){
+                    prev = prev.rightNode;
+                }
+
+                if(prev.rightNode==null){
+                    prev.rightNode = curr;
+                    curr = curr.leftNode;
+                }else{
+                    prev.rightNode = null;
+                    inorder.add(curr.data);
+                    curr = curr.rightNode;
+                }
+            }
+        }
+
+        return inorder;
+    }
+    static ArrayList<Integer> morrisTraversalPreorder(treeNode root){
+        ArrayList<Integer> preorder = new ArrayList<>();
+        treeNode curr = root;
+        while (curr!=null){
+            if(curr.leftNode==null){
+                preorder.add(curr.data);
+                curr = curr.leftNode;
+            }else{
+                treeNode prev = curr;
+                while (prev.rightNode!=null && prev.rightNode!=curr){
+                    prev = prev.rightNode;
+                }
+
+                if(prev.rightNode==null){
+                    prev.rightNode = curr;
+                    preorder.add(curr.data);
+                    curr = curr.leftNode;
+                }else{
+                    prev.rightNode = null;
+                    curr = curr.rightNode;
+                }
+            }
+        }
+
+        return preorder;
+    }
+
+    // Flatten a BT to LL
+    static treeNode buildLL(treeNode root){
+        treeNode curr = root;
+        treeNode prev = null;
+        while (curr!=null){
+            if(curr.leftNode!=null){
+                prev = curr.leftNode;
+                while (prev.rightNode!=null) prev = prev.rightNode;
+                prev.rightNode = curr.rightNode;
+                curr.rightNode = curr.leftNode;
+            }
+            curr = curr.rightNode;
+        }
+
+        return root;
+    }
+    static  void buildLL1(treeNode root){
+        Stack<treeNode> s = new Stack<>();
+        s.push(root);
+
+        while (!s.isEmpty()){
+            treeNode node = s.pop();
+            if(node.rightNode!=null){
+                s.push(node.rightNode);
+            }
+            if(node.leftNode!=null){
+                s.push(node.leftNode);
+            }
+
+            if(!s.isEmpty()){
+                node.rightNode = s.peek();
+            }
+            node.leftNode = null;
+        }
+    }
+
+    // Search in BST
+    static treeNode searchInBST(treeNode root, int key){
+        while (root!=null && root.data!=key){
+            root = key<root.data ? root.leftNode : root.rightNode;
+        }
+        return root;
+    }
+
+
+//    public TreeNode searchBST(TreeNode root, int val) {
+//        if (root==null) return null;
+//
+//        while (root!=null){
+//            if(root.val==val) return root;
+//            if(root.val< val){
+//                root = root.left;
+//            }else{
+//                root = root.right;
+//            }
+//        }
+//
+//        return null;
+//    }
+    // Ceil in BST
+
+    // Floor in BST
+
+    // Insert in BST
+    static treeNode insertBST(treeNode root, int k){
+        if(root==null) return new treeNode(k);
+        treeNode res = root;
+        while (true){
+            if(k>root.data){
+                if(root.rightNode!=null){
+                    root = root.rightNode;
+                }else{
+                    treeNode temp = new treeNode(k);
+                    root.rightNode = temp;
+                    break;
+                }
+            }else{
+                if(root.leftNode!=null){
+                    root = root.leftNode;
+                }else{
+                    treeNode temp = new treeNode(k);
+                    root.leftNode = temp;
+                }
+            }
+        }
+
+        return res;
+    }
+
+    // Delete in BST
+    static treeNode deleteNode(treeNode root,int k){
+        if(root==null) return null;
+        if(root.data==k) return helperDelete(root);
+
+        treeNode node = root;
+        while (root!=null){
+            if(root.data>k){
+                if(root.leftNode!=null && root.leftNode.data==k){
+                    root.leftNode = helperDelete(root.leftNode);
+                    break;
+                }else{
+                    root = root.leftNode;
+                }
+            }else{
+                if(root.rightNode!=null && root.rightNode.data==k){
+                    root.rightNode = helperDelete(root.rightNode);
+                    break;
+                }else{
+                    root = root.rightNode;
+                }
+            }
+        }
+        return node;
+
+    }
+    static treeNode helperDelete(treeNode root){
+        if(root.leftNode==null){
+            return root.rightNode;
+        }else if(root.rightNode==null){
+            return root.leftNode;
+        }else{
+            treeNode rootRight = root.rightNode;
+            treeNode exRight = extremeRight(root);
+            exRight.rightNode = rootRight;
+
+            return root.leftNode;
+        }
+    }
+    static treeNode extremeRight(treeNode root){
+        if(root.rightNode==null) return root;
+        return extremeRight(root.rightNode);
+    }
+
+    // kth smallest
+    static int kthSmallest(treeNode root, int k){
+        Stack<treeNode> s = new Stack<>();
+        s.push(root);
+        int c = 0;
+        while (true){
+            treeNode temp = s.peek();
+            if(temp.leftNode!=null){
+                s.push(temp);
+                temp = temp.leftNode;
+            }else{
+                if(s.isEmpty()) break;
+                temp = s.peek();
+                c++;
+                if(c==k) return temp.data;
+                temp = temp.rightNode;
+            }
+        }
+        return -1;
+    }
+
+    // Validate BST
+    static boolean validateBST(treeNode root){
+        // 1. Inorder
+        // 2. Limit
+//        ArrayList<Integer> ds = new ArrayList<>();
+//        inOrderBST(root, ds);
+//        for(int i=0;i<ds.size();i++){
+//            if(ds.get(i)<ds.get(i+1)) continue;
+//            return false;
+//        }
+//        return true;
+    return inOrderBST1(root,Long.MIN_VALUE, Long.MAX_VALUE);
+}
+    static  boolean inOrderBST1(treeNode root, long min, long max){
+        if(root==null) return false;
+
+        if(root.data>=min || root.data<=max) return false;
+
+        return inOrderBST1(root.leftNode,min,root.data) && inOrderBST1(root.rightNode, root.data,max);
+    }
+    static void inOrderBST(treeNode root, ArrayList<Integer> ds){
+        if(root==null) return;
+
+        inOrderBST(root.leftNode, ds);
+        ds.add(root.data);
+        inOrderBST(root.rightNode, ds);
+    }
+
+    // LCA (lowest common ancestor) of BST
+    static treeNode lcaBST(treeNode root, treeNode p, treeNode q){
+        // 3 cases =>
+        // left side lie
+        // right isde lie
+        // left-right lie
+
+        int curr = root.data;
+        if(p.data>curr && q.data>curr){
+            lcaBST(root.rightNode,p,q);
+        }else if(curr>p.data && curr>q.data){
+            lcaBST(root.leftNode,p,q);
+        }else{
+            return root;
+        }
+        return null;
+    }
+
+    // BST from preorder
+    static treeNode bstFromPreorder(int[] arr, treeNode root){
+        return bstPre(arr,Integer.MAX_VALUE,new int[]{0});
+    }
+    static treeNode bstPre(int[] arr, int max,int[] i){
+        if(i[0]==arr.length || arr[i[0]]>max) return null;
+        treeNode temp = new treeNode(arr[i[0]++]);
+        temp.leftNode = bstPre(arr,temp.data,i);
+        temp.rightNode = bstPre(arr,max,i);
+        return temp;
+    }
+
+    // Two sum in BST
+    static boolean twoSumBST(treeNode root,int k){
+        bstIterator l = new bstIterator(root,false);
+        bstIterator r = new bstIterator(root,true);
+
+        int i = l.next();
+        int j = r.next();
+
+        while (i<j){
+            if(i+j==k){
+                return true;
+            }else if(i+j<k){
+                i = l.next();
+            }else{
+                j = r.next();
+            }
+        }
+
+        return false;
+    }
+
+    // Recover bst
+    public void recoverBST(treeNode root){
+        first = mid = null;
+        prev = new treeNode(Integer.MIN_VALUE);
+
+        inorderRecover(root);
+        if(first!=null && last!=null){
+            int t = first.data;
+            first.data = last.data;
+            last.data = t;
+        }else{
+            int t = first.data;
+            first.data = mid.data;
+            mid.data = t;
+        }
+
+    }
+    public void inorderRecover(treeNode root){
+        if(root==null) return;
+        inorderRecover(root.leftNode);
+        if(prev!=null && root.data<prev.data){
+            if(first==null){
+                first = prev;
+                mid = root;
+            }else{
+                last = root;
+            }
+        }
+        prev = root;
+        inorderRecover(root.rightNode);
+    }
+    
 }
 
 

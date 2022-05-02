@@ -7,8 +7,37 @@ import java.io.InputStreamReader;
 public class slidingWindow {
     public static void main(String args[]) throws IOException{
 
-        System.out.println(longestWithoutRepeat("pwwkew"));
+      //  System.out.println(longestWithoutRepeat("pwwkew"));
+        float x = 1;
+        float y = 11;
+        float yf = y/10;
 
+        if((double)x<yf){
+            System.out.println("Disposable");
+        }else{
+            System.out.println("Cloth");
+        }
+
+    }
+
+    static int solve(String words[], String s){
+        if(words.length<=0 || s.length()<=0) return 0;
+        int c = 0; boolean flag = false;
+        for(String s1 : words){
+            for(int i=0;i<s1.length();i++){
+                if(s.length()>=s1.length() && s.charAt(i)==s1.charAt(i)){
+                    flag = true;
+                }else{
+                    flag = false;
+                    break;
+                }
+            }
+            if(flag){
+                flag = false;
+                c++;
+            }
+        }
+        return c;
     }
 
     // 7] Longest substring without repeating characters
