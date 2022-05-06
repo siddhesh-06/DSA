@@ -13,10 +13,6 @@ public class binarySearch {
 //                {32,33,39,50}
 //                };
 //        int m = 4, n = 4;
-        Scanner sc = new Scanner(System.in);
-        String a = sc.nextLine();
-        int  k =sc.nextInt();
-        System.out.println(solve(a,k));
     }
 
     static boolean solve(String a,int k){

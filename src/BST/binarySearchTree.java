@@ -692,6 +692,7 @@ class bst extends treeNode{
         else if(root.rightNode!=null) total+= root.rightNode.data;
         else if(root.leftNode!=null || root.rightNode!=null) root.data = total;
 
+
     }
 
     // Min time to burn bt from node
@@ -926,8 +927,42 @@ class bst extends treeNode{
 //        return null;
 //    }
     // Ceil in BST
+    static int ceilInBST(treeNode root, int k){
+        // Just smaller
+        int ceil = -1;
+        if(root==null) return -1;
+        if(root.data==k){
+            ceil = k;
+            return ceil;
+        }
+        if(k<root.data){
+            ceil = root.data;
+            root = root.leftNode;
+        }else{
+            root = root.rightNode;
+        }
+        return ceil;
+    }
 
     // Floor in BST
+    static int floorInBST(treeNode root, int k){
+        // Just greater
+        int floor = -1;
+        if(root==null) return floor;
+
+        if(root.data==k){
+            floor = k;
+            return floor;
+        }
+        if(k<root.data){
+            root = root.leftNode;
+        }else{
+            floor = root.data;
+            root = root.rightNode;
+        }
+
+        return floor;
+    }
 
     // Insert in BST
     static treeNode insertBST(treeNode root, int k){
@@ -1031,10 +1066,10 @@ class bst extends treeNode{
 //            return false;
 //        }
 //        return true;
-    return inOrderBST1(root,Long.MIN_VALUE, Long.MAX_VALUE);
+    return inOrderBST1(root, Long.MIN_VALUE, Long.MAX_VALUE);
 }
     static  boolean inOrderBST1(treeNode root, long min, long max){
-        if(root==null) return false;
+        if(root==null) return true;
 
         if(root.data>=min || root.data<=max) return false;
 
