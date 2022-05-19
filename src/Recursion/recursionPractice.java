@@ -2,12 +2,12 @@ package Recursion;
 import java.util.*;
 
 public class recursionPractice {
-    static String codes[] = {".;","abc","def","ghi","jkl","mno","pqrs","tu","vwx","yz"};
+    static String codes[] = {"-",".;","abc","def","ghi","jkl","mno","pqrs","tu","vwx","yz"};
     static int di[] = {-1,0,1,0};
     static int dj[] = {0,-1,0,1};
 
     public static void main(String args[]){
-        System.out.println(getSubseq("abc"));
+        printKepad("22233","");
     }
 
     // 25] Permutation - 2
@@ -285,6 +285,7 @@ public class recursionPractice {
 
         char ch = que.charAt(0);
         String ros = que.substring(1);
+
         String codeStr = codes[ch-'0'];
         for(int i=0;i<codeStr.length();i++){
             printKepad(ros,ans+codeStr.charAt(i));

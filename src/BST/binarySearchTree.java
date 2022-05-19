@@ -439,7 +439,7 @@ class bst extends treeNode{
         }
     }
     void addLeaves(treeNode root, ArrayList<Integer> ans){
-        // Inorder -> rLR
+        // Preorder -> rLR
         if(isLeaf(root)){
             ans.add(root.data);
             return;
@@ -464,9 +464,11 @@ class bst extends treeNode{
         ArrayList<Integer> ans = new ArrayList<>();
         if(node==null) return ans;
         if(isLeaf(node) == false) ans.add(node.data);
-        leftBoundry(node,ans);
-        addLeaves(node,ans);
-        rightBoundry(node,ans);
+
+        leftBoundry(node,ans); //left side
+        addLeaves(node,ans);    //bottom side
+        rightBoundry(node,ans); //right side
+
         return ans;
     }
 
@@ -504,7 +506,7 @@ class bst extends treeNode{
     }
 
     //Bottom view
-    public ArrayList <Integer> bottomView(treeNode root){
+    public ArrayList <Integer> bottomView(treeNode root) {
         ArrayList<Integer> ans = new ArrayList<>();
         if(root==null) return ans;
 
@@ -649,24 +651,27 @@ class bst extends treeNode{
         Queue<pair> q = new LinkedList<>();
         q.offer(new pair(0,root));
 
-        while (!q.isEmpty()){
+        while(!q.isEmpty()){
             int size = q.size();
             int min = q.peek().x;
             int first = 0, last = 0;
 
             for(int i=0;i<size;i++){
-                int curr = q.peek().x - min;
+                int cur_id = q.peek().x - min;
                 treeNode temp = q.peek().node;
                 q.poll();
 
-                if(i==0) first = curr;
-                if(i==size-1) last = curr;
+                if(i==0) first = cur_id;
+                if(i==size-1) last = cur_id;
 
-                if(temp.leftNode!=null) q.offer(new pair(2*curr+1, temp.leftNode));
-                if(temp.rightNode!=null) q.offer(new pair(2*curr+2, temp.rightNode));
-
+                if(temp.leftNode!=null){
+                    q.offer(new pair(2*cur_id+1,temp.leftNode));
+                }
+                if(temp.rightNode!=null){
+                    q.offer(new pair(2*cur_id+2, temp.rightNode));
+                }
             }
-            ans = Math.max(ans, first-last+1);
+            ans = Math.max(ans, last - first + 1);
         }
         return ans;
     }
@@ -732,17 +737,18 @@ class bst extends treeNode{
     // Binary tree from INORDER, PREORDER
     static treeNode createBT(int[] preorder, int[] inorder){
         Map<Integer, Integer> hm = new HashMap<>();
+        // hash inorder
         for(int i=0;i<inorder.length;i++){
             hm.put(inorder[i], i);
         }
-        treeNode root = buildTree(inorder,0,inorder.length-1,preorder,0,preorder.length-1,hm);
+        treeNode root = buildTree(inorder,0 ,inorder.length-1,preorder,0,preorder.length-1,hm);
         return root;
     }
     static treeNode buildTree(int[] in, int ins, int ine, int[] pre, int pres, int pree, Map<Integer,Integer> hm){
         if(ins>ine || pres>pree) return null;
         treeNode root = new treeNode(pre[pres]);
-        int inroot = hm.get(pre[pres]);
-        int leftnum = inroot - ins;
+        int inroot = hm.get(pre[pres]); //To find position
+        int leftnum = inroot - ins; //count el in left side of root
 
         root.leftNode = buildTree(in,ins,inroot-1,pre,pres+1,pree+leftnum,hm);
         root.rightNode = buildTree(in,inroot+1,ine,pre,pres+leftnum+1,pree,hm);

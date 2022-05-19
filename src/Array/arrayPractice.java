@@ -22,13 +22,18 @@ public class arrayPractice {
         int matrix[][] = {{1, 2, 3, 4},
                 {5, 6, 7, 8},
                 {9, 10, 11, 12},
-                {13, 14, 15,16}};
+                {13, 14, 15,16},
+        };
 
         List<Integer> arr = new ArrayList<>();
+        int i = matrix.length;
+        while (i>=0){
+            int j = 0;
+            while (j<matrix.length){
 
-        arr.add(8);
-        arr.add(7);
-        arr.add(0,9);
+                i--;
+            }
+        }
         System.out.println(arr);
     }
     static String longestPalindrome(String s){
