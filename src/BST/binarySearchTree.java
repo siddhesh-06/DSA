@@ -694,14 +694,67 @@ class bst extends treeNode{
 
         int total = 0;
         if(root.leftNode!=null) total+= root.leftNode.data;
-        else if(root.rightNode!=null) total+= root.rightNode.data;
-        else if(root.leftNode!=null || root.rightNode!=null) root.data = total;
-
+        if(root.rightNode!=null) total+= root.rightNode.data;
+        if(root.leftNode!=null || root.rightNode!=null) root.data = total;
 
     }
 
     // Min time to burn bt from node
 
+    // Print all nodes at dist k
+    public List<Integer> distanceK(treeNode root, treeNode target, int k){
+        Map<treeNode, treeNode> hm = new HashMap<>();
+        markParent(root, hm);
+        Map<treeNode, Boolean> vis = new HashMap<>();
+        Queue<treeNode> q = new LinkedList<>();
+
+        q.offer(target);
+        vis.put(target, true);
+        int curr_val = 0;
+
+        while (!q.isEmpty()){
+            int size = q.size();
+            if(curr_val==k) break;
+            curr_val++;
+
+            for(int i=0;i<size;i++){
+                treeNode node = q.poll();
+
+                if(node.leftNode!=null && vis.get(node.leftNode)==null){
+                    q.offer(node.leftNode);
+                    vis.put(node.leftNode, true);
+                }
+                if(node.rightNode!=null && vis.get(node.rightNode)==null){
+                    q.offer(node.rightNode);
+                    vis.put(node.rightNode, true);
+                }
+                if(hm.get(node)!=null && vis.get(hm.get(node))==null){
+                    q.offer(hm.get(node));
+                    vis.put(hm.get(node), true);
+                }
+            }
+        }
+        List<Integer> ans = new ArrayList<>();
+        while (!q.isEmpty()){
+            ans.add(q.poll().data);
+        }
+        return ans;
+    }
+    public void markParent(treeNode root, Map<treeNode, treeNode> hm){
+        Queue<treeNode> q = new LinkedList<>();
+        q.offer(root);
+        while (!q.isEmpty()){
+            treeNode node = q.poll();
+            if(node.leftNode!=null){
+                q.add(node.leftNode);
+                hm.put(node.leftNode, node);
+            }
+            if(node.rightNode!=null){
+                q.add(node.rightNode);
+                hm.put(node.rightNode, node);
+            }
+        }
+    }
 
     // Count node of complete binary tree
     public int countNodes(treeNode root) {
@@ -776,7 +829,7 @@ class bst extends treeNode{
         return root;
     }
 
-    // serialize and deserialize the BT
+    // Serialize and deserialize the BT
     static String serializeBT(treeNode root){
         if(root==null) return "";
         StringBuilder res = new StringBuilder();
@@ -917,7 +970,6 @@ class bst extends treeNode{
         return root;
     }
 
-
 //    public TreeNode searchBST(TreeNode root, int val) {
 //        if (root==null) return null;
 //
@@ -932,6 +984,7 @@ class bst extends treeNode{
 //
 //        return null;
 //    }
+
     // Ceil in BST
     static int ceilInBST(treeNode root, int k){
         // Just smaller

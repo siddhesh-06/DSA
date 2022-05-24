@@ -9,7 +9,6 @@ class Node{
         this.second = second;
     }
 }
-
 class pair{
     private int v;
     private  int weight;
@@ -203,8 +202,8 @@ public class graphPractice {
         vis[i] = true;
 
         while (!q.isEmpty()){
-            int node = q.peek().first;
-            int par = q.peek().second;
+            int node = q.peek().first; //child
+            int par = q.peek().second; //parent
             q.remove();
 
             for(Integer it : adj.get(node)){
@@ -581,4 +580,158 @@ public class graphPractice {
         }
     }
 
+    //Bridge in graph
+    public void printBridges(ArrayList<ArrayList<Integer>> adj, int n){
+        int vis[] = new int[n];
+        int tin[] = new int[n];
+        int low[] = new int[n];
+
+        int timer = 0;
+        for(int i=0;i<n;i++){
+            if(vis[i]==0){
+                dfsBridges(i, -1, vis, tin, low, adj, timer);
+            }
+        }
+    }
+    public void dfsBridges(int node, int parent, int vis[], int tin[], int low[], ArrayList<ArrayList<Integer>> adj, int timer){
+        vis[node] = 1;
+        tin[node] = low[node] = timer++;
+
+        for(Integer it : adj.get(node)){
+            if(it == parent) continue;
+
+            if(vis[it] == 0){
+                dfsBridges(it, node, vis, tin, low, adj, timer);
+                low[node] = Math.min(low[node], low[it]);
+                if(low[it] > tin[it]){
+                    System.out.println(it +" "+node);
+                }
+            }else{
+                low[node] = Math.min(low[node], tin[it]);
+            }
+        }
+    }
+
+    //Articulation point
+    public void articulation(int v, ArrayList<ArrayList<Integer>> adj){
+        int vis[] = new int[v];
+        int tin[] = new int[v];
+        int low[] = new int[v];
+
+        int isArticulation[] = new int[v];
+        int timer = 0;
+        for(int i=0;i<v;i++){
+            if(vis[i]==0){
+                dfsArti(i,-1,adj,vis,tin,low,timer,isArticulation);
+            }
+        }
+
+        for(int i: isArticulation){
+            System.out.print(i+", ");
+        }
+    }
+    public void dfsArti(int node, int parent, ArrayList<ArrayList<Integer>> adj, int vis[], int tin[], int low[], int timer, int isArticulation[]){
+        vis[node] = 1;
+        tin[node] = low[node] = timer++;
+
+        int child = 0;
+        for(Integer it : adj.get(node)){
+            if(it == parent) continue;
+            if(vis[it] == 0){
+                dfsArti(it, node, adj, vis, tin, low, timer, isArticulation);
+                low[it] = Math.min(low[it], low[node]);
+                if(low[it] >= tin[node] && parent!=-1){
+                    isArticulation[node] = 1;
+                }
+                child++;
+            }else{
+                low[node] = Math.min(low[node], tin[it]);
+            }
+        }
+        if(parent!=-1 && child>1) isArticulation[node] = 1;
+    }
+
+    //Kosaraju's Algorithm
+    public void kosaRaju(int v, ArrayList<ArrayList<Integer>> adj){
+        //1] Toposort
+        int vis[] = new int[v];
+        Stack<Integer> s = new Stack<>();
+
+        for(int i=0;i<v;i++){
+            if(vis[i]==0){
+                dfsRaju(i,vis,adj,s);
+            }
+        }
+
+        //2] Transpose = Change the directions
+        ArrayList<ArrayList<Integer>> trans = new ArrayList<>();
+        for(int i=0;i<v;i++){
+            trans.add(new ArrayList<>());
+        }
+        for(int i=0;i<v;i++){
+            vis[i] = 0;
+            for(Integer it : adj.get(i)){
+                trans.get(it).add(i);
+            }
+        }
+
+        //3] Call dfs
+        while (!s.isEmpty()){
+            int node = s.pop();
+            if(vis[node]==0){
+                System.out.print("SCC: ");
+                revDfs(node, trans, vis);
+                System.out.print("");
+            }
+        }
+
+    }
+    public void dfsRaju(int node, int vis[], ArrayList<ArrayList<Integer>> adj, Stack<Integer> s){
+        vis[node] = 1;
+        for(Integer it : adj.get(node)){
+            if(vis[it]==0){
+                dfsRaju(it, vis, adj, s);
+            }
+        }
+        s.push(node);
+    }
+    public void revDfs(int node, ArrayList<ArrayList<Integer>> trans, int vis[]){
+        vis[node] = 1;
+        System.out.println(node+", ");
+        for(Integer it : trans.get(node)){
+            if(vis[it]==0){
+                revDfs(it, trans, vis);
+            }
+        }
+    }
+
+    //Bellman ford Algorithm
+    public void bellmanFord(int v, int src, ArrayList<gNode> adj){
+        //1] Relax v-1 times
+        //2] Relax one more time for detecting -ve cycle
+        int dist[] = new int[v];
+        Arrays.fill(dist, 1000);
+
+        dist[src] = 0;
+        for(int i=1;i<=v-1;i++){
+            for(gNode nd : adj){
+                if(dist[nd.getU()] + nd.getWeight() < dist[nd.getV()]){
+                    dist[nd.getV()] = dist[nd.getU()] + nd.getWeight();
+                }
+            }
+        }
+        boolean isCycle = false;
+        for(gNode nd : adj){
+            if(dist[nd.getU()] + nd.getWeight() < dist[nd.getV()]){
+                isCycle = true;
+                System.out.println("Negative cycle is present");
+                break;
+            }
+        }
+        if(!isCycle){
+            for(int i=0;i<v;i++){
+                System.out.print(i +" "+dist[i]);
+            }
+        }
+    }
 }
