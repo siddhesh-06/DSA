@@ -880,16 +880,16 @@ class bst extends treeNode{
             if(curr.leftNode==null){
                 inorder.add(curr.data);
                 curr = curr.rightNode;
-            }else{
+            }else if(curr.leftNode!=null){
                 treeNode prev = curr.leftNode;
                 while (prev.rightNode!=null && prev.rightNode!=curr){
                     prev = prev.rightNode;
                 }
-
                 if(prev.rightNode==null){
                     prev.rightNode = curr;
                     curr = curr.leftNode;
                 }else{
+                    // if thread exist then do this
                     prev.rightNode = null;
                     inorder.add(curr.data);
                     curr = curr.rightNode;
@@ -902,27 +902,28 @@ class bst extends treeNode{
     static ArrayList<Integer> morrisTraversalPreorder(treeNode root){
         ArrayList<Integer> preorder = new ArrayList<>();
         treeNode curr = root;
+
         while (curr!=null){
             if(curr.leftNode==null){
                 preorder.add(curr.data);
-                curr = curr.leftNode;
-            }else{
-                treeNode prev = curr;
+                curr = curr.rightNode;
+            }else if(curr.leftNode!=null){
+                treeNode prev = curr.leftNode;
                 while (prev.rightNode!=null && prev.rightNode!=curr){
                     prev = prev.rightNode;
                 }
-
                 if(prev.rightNode==null){
                     prev.rightNode = curr;
                     preorder.add(curr.data);
                     curr = curr.leftNode;
                 }else{
+                    // if thread exist then do this
                     prev.rightNode = null;
                     curr = curr.rightNode;
                 }
+
             }
         }
-
         return preorder;
     }
 

@@ -82,6 +82,7 @@ public class knapsack {
             }else{
                 double remain = m - currentW;
                 final_value += st[i].p_w * remain;
+                break;
             }
         }
         System.out.println();

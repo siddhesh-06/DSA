@@ -1,24 +1,26 @@
 package OOP;
 
 class A{
-    public void hey(){
-        System.out.println("Class A");
+
+    A(){
+        System.out.println("It is A");
     }
 }
 
 
 class B extends A{
-   public void hey(){
-        System.out.println("Class B");
+    B(){
+        super();
+
+        System.out.println("It is B");
     }
-   public void hey(int a){
-        System.out.println(a);
+    {
+        System.out.println("Init here");
     }
 }
 
 public class polymorphism {
     public static void main(String args[]){
         B o =new B();
-        o.hey();
     }
 }

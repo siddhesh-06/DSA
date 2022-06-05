@@ -1,11 +1,11 @@
-package Algorithm;
+package Binary_Search;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
 public class binarySearch {
-    public static void main(String args[]){
+    public static void main(String args[]) {
 //        int arr[][] = {
 //                {10,20,30,40},
 //                {15,25,35,45},
@@ -15,81 +15,81 @@ public class binarySearch {
 //        int m = 4, n = 4;
     }
 
-    static boolean solve(String a,int k){
+    static boolean solve(String a, int k) {
         int i = 0;
-        int j = a.length()-1;
+        int j = a.length() - 1;
 
-        while(i<=j){
-            if(a.charAt(i)!=a.charAt(j)){
+        while (i <= j) {
+            if (a.charAt(i) != a.charAt(j)) {
                 k--;
             }
             i++;
             j--;
         }
-        if(k<0) return false;
+        if (k < 0) return false;
         else return true;
     }
 
     // 18] Allocate minimum number of pages
-    static int findPages(int[]arr,int N,int key){
-        if(arr.length<key) return -1;
+    static int findPages(int[] arr, int N, int key) {
+        if (arr.length < key) return -1;
         int start = 0;
         int end = sumOFArray(arr);
         int res = -1;
 
-        while (start<=end){
-            int mid = start + (end-start)/2;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
 
-            if(isValid(arr,arr.length,key,mid)){
+            if (isValid(arr, arr.length, key, mid)) {
                 res = mid;
-                end = mid -1;
-            }else{
-                start = mid +1;
+                end = mid - 1;
+            } else {
+                start = mid + 1;
             }
         }
         return res;
     }
-    static boolean isValid(int arr[],int n,int key,int max){
+    static boolean isValid(int arr[], int n, int key, int max) {
         int student = 1;
         int sum = 0;
-        for(int i=0;i<arr.length;i++){
+        for (int i = 0; i < arr.length; i++) {
             if (arr[i] > max)
                 return false;
 
-            if(sum+arr[i]>max){
+            if (sum + arr[i] > max) {
                 student++;
                 sum = arr[i];
-                if(student>key){
+                if (student > key) {
                     return false;
                 }
-            }else{
-                sum+=arr[i];
+            } else {
+                sum += arr[i];
             }
 
         }
         return true;
     }
-    static int sumOFArray(int arr[]){
+    static int sumOFArray(int arr[]) {
         int sum = 0;
-        for(int val : arr){
-            sum+=val;
+        for (int val : arr) {
+            sum += val;
         }
         return sum;
     }
 
     // 17] Search in row wise and col wise in sorted array
-    static ArrayList<Integer>  searchInSortedMatrix(int arr[][], int key){
+    static ArrayList<Integer> searchInSortedMatrix(int arr[][], int key) {
         ArrayList<Integer> ans = new ArrayList<>();
-        int i =0;
-        int j = arr.length-1;
-        while(i>=0 && i<arr.length && j>=0 && j<arr.length){
-            if(arr[i][j]==key){
+        int i = 0;
+        int j = arr.length - 1;
+        while (i >= 0 && i < arr.length && j >= 0 && j < arr.length) {
+            if (arr[i][j] == key) {
                 ans.add(i);
                 ans.add(j);
                 return ans;
-            }else if(arr[i][j]>key){
+            } else if (arr[i][j] > key) {
                 j--;
-            }else if(arr[i][j]<key){
+            } else if (arr[i][j] < key) {
                 i++;
             }
         }
@@ -100,32 +100,32 @@ public class binarySearch {
 
     // 16] Max elemet in bitonic array
     // 15] Peak elemet
-    static int peakElement(int arr[], int k){
+    static int peakElement(int arr[], int k) {
         int start = 0;
-        int end = arr.length-1;
+        int end = arr.length - 1;
 
-        while(start<=end){
-            int mid = start + (end-start)/2;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
 
-            if(mid!=0 && mid!=arr.length-1){
-                if(arr[mid]>arr[mid-1] && arr[mid]<arr[mid+1]){
+            if (mid != 0 && mid != arr.length - 1) {
+                if (arr[mid] > arr[mid - 1] && arr[mid] < arr[mid + 1]) {
                     return mid;
-                }else if(arr[mid-1]>arr[mid]){
-                    end = mid -1;
-                }else{
-                    start = mid +1;
+                } else if (arr[mid - 1] > arr[mid]) {
+                    end = mid - 1;
+                } else {
+                    start = mid + 1;
                 }
-            }else if(mid==0){
-                if(arr[0]>arr[1]){
+            } else if (mid == 0) {
+                if (arr[0] > arr[1]) {
                     return 0;
-                }else{
+                } else {
                     return 1;
                 }
-            }else if(mid==arr.length-1){
-                if(arr[arr.length-1]>arr[arr.length-2]){
-                    return arr[arr.length-1];
-                }else{
-                    return arr[arr.length-2];
+            } else if (mid == arr.length - 1) {
+                if (arr[arr.length - 1] > arr[arr.length - 2]) {
+                    return arr[arr.length - 1];
+                } else {
+                    return arr[arr.length - 2];
                 }
             }
         }
@@ -134,38 +134,38 @@ public class binarySearch {
     }
 
     // 14] Min difference of key
-    static int minDifference(int arr[], int k){
+    static int minDifference(int arr[], int k) {
         // One more way is floor and ceil check diff return ans
         int start = 0;
-        int end = arr.length-1;
+        int end = arr.length - 1;
 
-        while(start<=end){
-            int mid = start + (end-start)/2;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
 
-            if(arr[mid]==k){
+            if (arr[mid] == k) {
                 return 0;
-            }else if(k<arr[mid]){
-                end = mid -1;
-            }else{
-                start = mid +1;
+            } else if (k < arr[mid]) {
+                end = mid - 1;
+            } else {
+                start = mid + 1;
             }
         }
 
-        int minSide = Math.abs(arr[end]-k);
-        int maxSide = Math.abs(arr[start]-k);
-        if(minSide<maxSide) return minSide;
+        int minSide = Math.abs(arr[end] - k);
+        int maxSide = Math.abs(arr[start] - k);
+        if (minSide < maxSide) return minSide;
         else return maxSide;
     }
 
     // 13] Infinite binary sorted array find 1st 1 position
-    static int infiniteFirstOne(int arr[]){
+    static int infiniteFirstOne(int arr[]) {
         int start = 0;
         int end = 1;
 
-        while(true){
-            if(arr[end]<1){
+        while (true) {
+            if (arr[end] < 1) {
                 start = end;
-                end = end*2;
+                end = end * 2;
             }
         }
 
@@ -365,7 +365,7 @@ public class binarySearch {
             int mid = l + (r-l)/2;
             if(arr[mid]==k){
                 res = mid;
-                 l = mid +1;
+                l = mid +1;
             }else if(k<arr[mid]){
                 r = mid-1;
             }else{
@@ -391,4 +391,5 @@ public class binarySearch {
         }
         return -1;
     }
+
 }

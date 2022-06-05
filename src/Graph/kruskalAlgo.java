@@ -25,7 +25,7 @@ class SortCompatator implements Comparator<gNode> {
         if(n1.getWeight() < n2.getWeight()){
             return -1;
         }
-        if(n1.getWeight() > n2.getWeight()){
+        if(n1.getWeight() > n2.getWeight()){ //assending order
             return 1;
         }
         return 0;

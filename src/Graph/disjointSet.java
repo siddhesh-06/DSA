@@ -12,6 +12,7 @@ public class disjointSet {
         while (m!=0){
             int u=0,v=0;
             dj.union(u, v);
+            m++;
         }
 
         if(dj.findPar(2) != dj.findPar(3)){

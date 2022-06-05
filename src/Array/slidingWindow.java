@@ -17,6 +17,8 @@ public class slidingWindow {
 //        }else{
 //            System.out.println("Cloth");
 //        }
+        int arr[] = {1,3,-1,-3,5,3,6,7};
+        System.out.println(maxSubarray(arr,3));
 
     }
 
@@ -113,37 +115,43 @@ public class slidingWindow {
     }
 
     //4] Maximun of all subarray
-    static ArrayList<Integer> maxSubarray(int arr[], int k){
-        ArrayList<Integer> ans = new ArrayList<>();
+    static int[] maxSubarray(int arr[], int k){
         if(k>arr.length){
+            int ans[] = new int[1];
             int max = Integer.MIN_VALUE;
             for(int i : arr){
                 max = Math.max(i,max);
             }
-            ans.add(max);
+            ans[0] = max;
+            //ans.add(max);
+            return ans;
+        }else{
+            int ans[] = new int[arr.length-k+1];
+            Queue<Integer> q = new LinkedList<>();
+            int i=0,j=0,index=0;
+
+            while (j<arr.length){
+                while (q.size()>0 && arr[j]>q.peek()){
+                    q.remove();
+                }
+                q.add(arr[j]);
+                if(j-i+1 <k){
+                    j++;
+                }else if(j-i+1 == k){
+                    ans[index] = q.peek();
+                    //ans.add(q.peek());
+                    if(q.peek()==arr[i]){
+                        q.poll();
+                    }
+                    i++;
+                    j++;
+                    index++;
+                }
+            }
+
             return ans;
         }
-        Queue<Integer> q = new LinkedList<>();
 
-        int i=0,j=0;
-
-        while (j<arr.length){
-            while (q.size()>0 && arr[j]>q.peek()){
-                q.remove();
-            }
-            q.add(arr[j]);
-            if(j-i+1 <k){
-                j++;
-            }else if(j-i+1 == k){
-                ans.add(q.peek());
-                if(q.peek()==arr[i]){
-                    q.poll();
-                }
-                i++;
-                j++;
-            }
-        }
-        return ans;
     }
 
     //3] Count of anagrams

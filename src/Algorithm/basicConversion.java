@@ -6,6 +6,7 @@ public class basicConversion {
         System.out.println(a);
         System.out.println('A');
         System.out.println('G'-'A');
+
     }
 
     static int charToInt(char a){

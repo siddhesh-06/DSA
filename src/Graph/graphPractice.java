@@ -40,12 +40,18 @@ class node implements Comparator<node>{
 public class graphPractice {
     public static void main(String args[]){
 
-        int v = 5;
+        int n = 5;
         ArrayList<ArrayList<node>> adj = new ArrayList<>();
+        graphPractice g = new graphPractice();
+        g.createGraph(n,adj);
+        g.primsEfficient(n, adj);
 
-        createGraphForDijstra(v, adj);
-        graphPractice gp = new graphPractice();
-        gp.dijkstraAlgo(v,0,adj);
+//        int v = 5;
+//        ArrayList<ArrayList<node>> adj = new ArrayList<>();
+//
+//        createGraphForDijstra(v, adj);
+//        graphPractice gp = new graphPractice();
+//        gp.dijkstraAlgo(v,0,adj);
 
 //        int v = 7;
 //        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
@@ -84,22 +90,28 @@ public class graphPractice {
 
     }
 
-    public void createGraph(){
-        //Graph with weight
-        int v = 6;
-        ArrayList<ArrayList<pair>> adj = new ArrayList<>();
+    public  void createGraph(int n, ArrayList<ArrayList<node>> adj){
 
-        for(int i=0;i<v;i++){
-            adj.add(new ArrayList<>());
-        }
+        for (int i = 0; i < n; i++)
+            adj.add(new ArrayList<node>());
 
-        adj.get(0).add(new pair(1, 2));
-        adj.get(0).add(new pair(4, 1));
-        adj.get(1).add(new pair(2, 3));
-        adj.get(2).add(new pair(3, 6));
-        adj.get(4).add(new pair(2, 2));
-        adj.get(4).add(new pair(5, 4));
-        adj.get(5).add(new pair(3, 1));
+        adj.get(0).add(new node(1, 2));
+        adj.get(1).add(new node(0, 2));
+
+        adj.get(1).add(new node(2, 3));
+        adj.get(2).add(new node(1, 3));
+
+        adj.get(0).add(new node(3, 6));
+        adj.get(3).add(new node(0, 6));
+
+        adj.get(1).add(new node(3, 8));
+        adj.get(3).add(new node(1, 8));
+
+        adj.get(1).add(new node(4, 5));
+        adj.get(4).add(new node(1, 5));
+
+        adj.get(2).add(new node(4, 7));
+        adj.get(4).add(new node(2, 7));
 
     }
     public static void createGraphForDijstra(int v, ArrayList<ArrayList<node>> adj){
@@ -219,7 +231,7 @@ public class graphPractice {
         return false;
     }
 
-    //Cycle detection using BFS
+    //Cycle detection using DFS
     public boolean cycleDetectionDFS(int v, ArrayList<ArrayList<Integer>> adj){
         boolean vis[] = new boolean[v+1];
         Arrays.fill(vis, false);
@@ -247,9 +259,7 @@ public class graphPractice {
     //Check bipartite graph using BFS
     public boolean bipartiteBFS(int v, ArrayList<ArrayList<Integer>> adj){
         int color[] = new int[v];
-        for(int i=0;i<v;i++){
-            color[i] = -1;
-        }
+        Arrays.fill(color, -1);
 
         for(int i=0;i<v;i++){
             if(color[i]==-1){
@@ -436,7 +446,7 @@ public class graphPractice {
             for(Integer it : adj.get(node)){
                 inDegree[it]--;
                 if(inDegree[it]==0){
-                    ans.add(it);
+                    q.add(it);
                 }
             }
         }
@@ -555,6 +565,7 @@ public class graphPractice {
             mst[i] = false;
         }
         key[0] = 0;
+
         for(int i=0;i<n-1;i++){
             int mini = Integer.MAX_VALUE, u = 0;
             // This loops helps to find min weight amoung nodes
@@ -577,6 +588,34 @@ public class graphPractice {
 
         for(int i=1;i<n;i++){
             System.out.println(par[i]+" - "+i);
+        }
+    }
+    public void primsEfficient(int n, ArrayList<ArrayList<node>> adj){
+        int key[] = new int[n];
+        int par[] = new int[n];
+        boolean mst[] = new boolean[n];
+        Arrays.fill(key, 1000);
+        Arrays.fill(mst, false);
+
+        PriorityQueue<node> pq = new PriorityQueue<>(n,new node());
+        key[0] = 0;
+        par[0] = -1;
+        pq.add(new node(key[0], 0));
+
+        while (!pq.isEmpty()){
+            int u = pq.poll().getV();
+            mst[u] = true;
+            for(node it : adj.get(u)){
+                if(mst[it.getV()] == false && it.getWeight() < key[it.getV()]){
+                    key[it.getV()] = it.getWeight();
+                    par[it.getV()] = u;
+                    pq.add(new node(it.getV(), key[it.getV()]));
+                }
+            }
+        }
+
+        for(int i =1;i<n;i++){
+            System.out.println(par[i] +"-"+i); //shortest path
         }
     }
 
@@ -603,7 +642,7 @@ public class graphPractice {
             if(vis[it] == 0){
                 dfsBridges(it, node, vis, tin, low, adj, timer);
                 low[node] = Math.min(low[node], low[it]);
-                if(low[it] > tin[it]){
+                if(low[it] > tin[node]){
                     System.out.println(it +" "+node);
                 }
             }else{
@@ -734,4 +773,5 @@ public class graphPractice {
             }
         }
     }
+
 }
