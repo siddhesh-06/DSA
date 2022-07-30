@@ -4,21 +4,73 @@ import java.util.*;
 
 public class recursionsProblems {
     public static void main(String args[]){
-//        char[][] board = {
-//                {'5','3','.','.','7','.','.','.','.'},
-//                {'6','.','.','1','9','5','.','.','.'},
-//                {'.','9','8','.','.','.','.','6','.'},
-//                {'8','.','.','.','6','.','.','.','3'},
-//                {'4','.','.','8','.','3','.','.','1'},
-//                {'7','.','.','.','2','.','.','.','6'},
-//                {'.','6','.','.','.','.','2','8','.'},
-//                {'.','.','.','4','1','9','.','.','5'},
-//                {'.','.','.','.','8','.','.','7','9'}
-//        };
-//
-        int arr[] = {1,2,3};
-        System.out.println(subsets(arr));
+        int arr[] = {2,3};
+        System.out.println(subsetsSum(arr));
+    }
 
+    public long zeroFilledSubarray(int[] nums) {
+        int n = nums.length;
+        long zero = 0;
+        for(int i=0;i<n;i++){
+            if(nums[i]==0){
+                zero++;
+            }
+        }
+
+        long pairs = 0;
+        for(int i=0;i<n-1;i++){
+            if(nums[i]==nums[i+1]){
+                pairs++;
+            }
+        }
+
+        long single = zero - (pairs*2);
+        if(single<0){
+            return (pairs*2) + pairs;
+        }
+        return (pairs*2) + pairs + single;
+    }
+
+    //10] All subsequences
+    public static ArrayList<ArrayList<Integer>>  getAllSubsequences(int arr[]){
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        ArrayList<Integer> ds = new ArrayList<>();
+        findSubseq(arr,0,ans,ds);
+        return ans;
+    }
+    public static void findSubseq(int arr[], int ind, ArrayList<ArrayList<Integer>> ans, ArrayList<Integer> ds){
+        if(ind==arr.length){
+            ans.add(new ArrayList<>(ds));
+            return;
+        }
+        ds.add(arr[ind]);
+        findSubseq(arr,ind+1,ans,ds);
+        ds.remove(ds.size()-1);
+
+        findSubseq(arr, ind+1, ans, ds);
+    }
+
+    //9] All permutation
+    public static List<List<Integer>> getAllPermutations(int nums[]){
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> ds = new ArrayList<>();
+        boolean track[] = new boolean[nums.length];
+        return ans;
+    }
+    public static void allPermu(int nums[], List<Integer> ds, List<List<Integer>> ans, boolean track[]){
+        if(ds.size()==nums.length){
+            ans.add(new ArrayList<>(ds));
+            return;
+        }
+
+        for(int i=0;i<nums.length;i++){
+            if(track[i]) continue;
+            track[i] = true;
+            ds.add(nums[i]);
+            allPermu(nums,ds,ans,track);
+            ds.remove(ds.size()-1);
+            track[i] = false;
+        }
     }
 
     // 8] Suduku solver valid
@@ -112,28 +164,7 @@ public class recursionsProblems {
         return true;
     }
 
-    // 5] Subset - 2
-    static List<List<Integer>> subsets2(int[] nums) {
-        Arrays.sort(nums);
-        List<List<Integer>> ans = new ArrayList<>();
-
-        findSubset2(0,nums,ans,new ArrayList<>());
-        return ans;
-    }
-    static void findSubset2(int idx,int nums[],List<List<Integer>> ans,List<Integer> ds){
-        ans.add(new ArrayList<>(ds));
-
-        for(int i= idx;i<nums.length;i++){
-            if(i!=idx  && nums[i]==nums[i-1]) continue;
-
-            ds.add(nums[i]);
-            findSubset(i+1,nums,ans,ds);
-            ds.remove(ds.size()-1);
-        }
-
-    }
-
-    // 4] Subset sum - 1
+    // 5] Subset sum - 1
     static List<Integer> subsetsSum(int[] nums) {
         List<Integer> ans = new ArrayList<>();
         findSubsetSum(0,nums,0,ans);
@@ -145,31 +176,39 @@ public class recursionsProblems {
             ans.add(sum);
             return;
         }
-        findSubsetSum(idx+1,nums,sum+nums[idx],ans);
-        findSubsetSum(idx+1,nums,sum,ans);
+        findSubsetSum(idx+1,nums,sum+nums[idx],ans); // left calling
+        findSubsetSum(idx+1,nums,sum,ans); // right calling
     }
 
-    // 3] Subset - 1
+    // 4] Subset - 2
+    static List<List<Integer>> subsets2(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> ans = new ArrayList<>();
+        findSubset2(0,nums,ans,new ArrayList<>());
+        return ans;
+    }
+    static void findSubset2(int idx,int nums[],List<List<Integer>> ans,List<Integer> ds){
+        //Duplication avoid
+        ans.add(new ArrayList<>(ds));
+
+        for(int i= idx;i<nums.length;i++){
+            if(i!=idx  && nums[i]==nums[i-1]) continue;
+
+            ds.add(nums[i]);
+            findSubset(i+1,nums,ans,ds);
+            ds.remove(ds.size()-1);
+        }
+    }
+
+    // 3] Subset - 1 : // Generate all possisble subsets
     static List<List<Integer>> subsets(int[] nums) {
         List<List<Integer>> ans = new ArrayList<>();
         findSubset(0,nums,ans,new ArrayList<>());
         return ans;
     }
     static void findSubset(int idx,int nums[],List<List<Integer>> ans,List<Integer> ds){
-//        if(idx==nums.length){
-//            ans.add(new ArrayList<>(ds));
-//            return;
-//        }
-//
-//        ds.add(nums[idx]);
-//        findSubset(idx+1,nums,ans,ds);
-//        ds.remove(ds.size()-1);
-//        findSubset(idx+1,nums,ans,ds);
         ans.add(new ArrayList<>(ds));
-
         for(int i= idx;i<nums.length;i++){
-//            if(i!=idx  && nums[i]==nums[i-1]) continue;
-
             ds.add(nums[i]);
             findSubset(i+1,nums,ans,ds);
             ds.remove(ds.size()-1);

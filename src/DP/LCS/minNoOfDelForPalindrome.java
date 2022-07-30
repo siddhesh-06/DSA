@@ -14,7 +14,7 @@ public class minNoOfDelForPalindrome {
         }
     }
     public static void main(String args[]){
-        String x = "agbcba";
+        String x = "abc";
         String y = "";
 
         for(int i=x.length()-1;i>=0;i--){

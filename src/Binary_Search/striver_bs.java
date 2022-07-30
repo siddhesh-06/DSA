@@ -1,5 +1,9 @@
 package Binary_Search;
 
+import com.sun.jdi.connect.Connector;
+import com.sun.source.tree.BinaryTree;
+
+import javax.swing.tree.TreeNode;
 import java.util.ArrayList;
 
 public class striver_bs {
@@ -18,11 +22,72 @@ public class striver_bs {
     }
 
 
-    //1] Median matrix
+    //6] Kth element of 2 sorted array
+
+    //5] Median of 2 sorted array
+
+    //4] Find element in rotated sorted array
+    public int fintElementInRotatedArray(int nums[], int target){
+        int s = 0;
+        int e = nums.length - 1;
+
+        while (s<=e){
+            int mid = s + (e-s)/2;
+            if(nums[mid]==target) return mid;
+
+            if(nums[s]<=nums[mid]){ // left part sorted
+                if(target<=nums[mid] && target>=nums[s]){
+                    e = mid - 1;
+                }else{
+                    s = mid +1;
+                }
+            }else { // right part sorted
+                if(target>=nums[mid] && target<=nums[e]){
+                    s = mid +1;
+                }else{
+                    e = mid -1;
+                }
+            }
+        }
+        return -1;
+    }
+    public int findMinInRotatedArray(int nums[]){
+        int s = 0;
+        int e = nums.length-1;
+        while (s<e){
+            int mid = s + (e-s)/2;
+            if(nums[mid]==nums[e]){
+                e--;
+            }else if(nums[mid]>nums[e]) {
+                s = mid + 1;
+            }else{
+                e = mid;
+            }
+        }
+        return nums[e];
+    }
+
+    //3]
+    public int findSingleElement(int arr[]){
+        int s = 0;
+        int e = arr.length - 2;
+        while (s<=e){
+            int mid = s + (e-s)/2;
+            if(arr[mid]==arr[mid^1]){// odd -> prev (even) // even -> next (odd)
+                // mid^1 check left side
+                s = mid + 1; // if this satisfied means left side is OK check on right
+            }else{
+                e = mid - 1;
+            }
+        }
+
+        return arr[s];
+    }
+
+    //2] Median matrix
     public int countSmallerThanEqualToMid(ArrayList<Integer> row, int mid){
         int s = 0;
         int e = row.size() - 1;
-
         while (s<=e){
             int md = s + (e-s)/2;
 

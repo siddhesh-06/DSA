@@ -52,5 +52,6 @@ public class abstractionJava {
     public static void main(String args[]){
         car c=new bmw();
         c.speed();
+        int a =0;
     }
 }

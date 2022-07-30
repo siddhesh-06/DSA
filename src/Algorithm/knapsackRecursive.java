@@ -23,10 +23,6 @@ public class knapsackRecursive {
 
     }
 
-    public int max(int a,int b){
-        return  a>b ? a : b;
-    }
-
     public int recursiveKnap(int[] w, int[] v, int cap, int n){
         if(n==0 || cap==0){ //base condition
             return 0;       //op for bc
@@ -37,7 +33,7 @@ public class knapsackRecursive {
 //        }
 
         if(w[n-1]<=cap){
-            return  max(v[n-1]+recursiveKnap(w,v,cap-w[n-1],n-1),recursiveKnap(w,v,cap,n-1));
+            return  Math.max(v[n-1]+recursiveKnap(w,v,cap-w[n-1],n-1),recursiveKnap(w,v,cap,n-1));
 //            return t[n][cap];
         }else {
             return recursiveKnap(w, v, cap, n-1);

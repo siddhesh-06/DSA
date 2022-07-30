@@ -78,13 +78,13 @@ class bst extends treeNode{
             treeNode ptr=root;
             while (!inserted) {
                 if (info > ptr.data) {
-                    if (ptr.rightNode != null) {
+                    if (ptr.rightNode != null) { //for right
                         ptr = ptr.rightNode;
                     } else {
                         ptr.rightNode=newNode;
                         inserted=true;
                     }
-                } else if (info < ptr.data) {
+                } else if (info < ptr.data) { //for left
                     if (ptr.leftNode != null) {
                         ptr=ptr.leftNode;
                     } else {
@@ -238,7 +238,7 @@ class bst extends treeNode{
         }
     }
 
-    //Level wise - BFS
+    // Level wise - BFS
     public List<List<Integer>> levelwise(){
         Queue<treeNode> q = new LinkedList<>();
         List<List<Integer>> wraplist = new LinkedList<>();
@@ -402,7 +402,6 @@ class bst extends treeNode{
         while(!que.isEmpty()){
             int size = que.size();
             List<Integer> row = new ArrayList<>(size);
-
             for(int i=0;i<size;i++){
                 treeNode node = que.peek();
                 que.remove();
@@ -460,7 +459,7 @@ class bst extends treeNode{
             ans.add(temp.get(i));
         }
     }
-    ArrayList <Integer> boundary(treeNode node){
+    public ArrayList <Integer> boundary(treeNode node){
         ArrayList<Integer> ans = new ArrayList<>();
         if(node==null) return ans;
         if(isLeaf(node) == false) ans.add(node.data);
@@ -622,7 +621,7 @@ class bst extends treeNode{
         return false;
     }
 
-    // Lowest common ancestor
+    // Lowest common ancestor : for both BT and BST
     public treeNode lowestCommonAncestor(treeNode root, treeNode p, treeNode q) {
         //base case
         if (root == null || root == p || root == q) {
@@ -680,13 +679,13 @@ class bst extends treeNode{
     public static void childrenPathSum(treeNode root){
         if(root==null) return;
         int child = 0;
-        if(root.leftNode!=null) child+= root.leftNode.data;
-        if(root.rightNode!=null) child+= root.rightNode.data;
+        if(root.leftNode!=null) child += root.leftNode.data;
+        if(root.rightNode!=null) child +=root.rightNode.data;
 
         if(child>=root.data) root.data = child;
         else{
-            if (root.leftNode!=null) root.leftNode.data = root.data;
-            else root.rightNode.data = root.data;
+            if(root.leftNode!=null) root.leftNode.data = child;
+            else root.rightNode.data = child;
         }
 
         childrenPathSum(root.leftNode);
@@ -763,7 +762,7 @@ class bst extends treeNode{
         int left = getLeftCount(root);
         int right = getRightCount(root);
 
-        if(left==right) return ((2<<(left))-1);
+        if(left==right) return ((2<<(left))-1); // formula : 2^(Height of tree)-1;
         else{
             return countNodes(root.leftNode) + countNodes(root.rightNode) + 1;
         }
@@ -987,20 +986,22 @@ class bst extends treeNode{
 //    }
 
     // Ceil in BST
-    static int ceilInBST(treeNode root, int k){
+    static int ceilInBST(treeNode node, int x){
         // Just smaller
         int ceil = -1;
-        if(root==null) return -1;
-        if(root.data==k){
-            ceil = k;
-            return ceil;
+        while(node!=null){
+            if(node.data==x){
+                ceil = x;
+                return ceil;
+            }
+            if(node.data>x){
+                ceil = node.data;
+                node = node.leftNode;
+            }else{
+                node = node.rightNode;
+            }
         }
-        if(k<root.data){
-            ceil = root.data;
-            root = root.leftNode;
-        }else{
-            root = root.rightNode;
-        }
+
         return ceil;
     }
 
@@ -1010,15 +1011,18 @@ class bst extends treeNode{
         int floor = -1;
         if(root==null) return floor;
 
-        if(root.data==k){
-            floor = k;
-            return floor;
-        }
-        if(k<root.data){
-            root = root.leftNode;
-        }else{
-            floor = root.data;
-            root = root.rightNode;
+        while(root!=null){
+            if(k==root.data){
+                floor = root.data;
+                return floor;
+            }
+
+            if(k>root.data){
+                floor = root.data;
+                root = root.rightNode;
+            }else{
+                root = root.leftNode;
+            }
         }
 
         return floor;
@@ -1097,21 +1101,48 @@ class bst extends treeNode{
     // kth smallest
     static int kthSmallest(treeNode root, int k){
         Stack<treeNode> s = new Stack<>();
+        treeNode curr = root;
         s.push(root);
         int c = 0;
-        while (true){
-            treeNode temp = s.peek();
-            if(temp.leftNode!=null){
-                s.push(temp);
-                temp = temp.leftNode;
+
+        while(true){
+            if(curr!=null){
+                s.push(curr);
+                curr = curr.leftNode;
             }else{
-                if(s.isEmpty()) break;
-                temp = s.peek();
+                if(s.isEmpty()){
+                    break;
+                }
+                curr = s.pop();
                 c++;
-                if(c==k) return temp.data;
-                temp = temp.rightNode;
+                if(c==k) return curr.data;
+                curr = curr.rightNode;
             }
         }
+
+        return -1;
+    }
+    static int kthLargest(treeNode root, int k){
+        Stack<treeNode> s = new Stack<>();
+        treeNode curr = root;
+        s.push(root);
+        int c = 0;
+
+        while(true){
+            if(curr!=null){
+                s.push(curr);
+                curr = curr.rightNode;
+            }else{
+                if(s.isEmpty()){
+                    break;
+                }
+                curr = s.pop();
+                c++;
+                if(c==k) return curr.data;
+                curr = curr.leftNode;
+            }
+        }
+
         return -1;
     }
 
@@ -1131,7 +1162,7 @@ class bst extends treeNode{
     static  boolean inOrderBST1(treeNode root, long min, long max){
         if(root==null) return true;
 
-        if(root.data>=min || root.data<=max) return false;
+        if(root.data<=min || root.data>=max) return false;
 
         return inOrderBST1(root.leftNode,min,root.data) && inOrderBST1(root.rightNode, root.data,max);
     }
@@ -1223,6 +1254,7 @@ class bst extends treeNode{
             }
         }
         prev = root;
+
         inorderRecover(root.rightNode);
     }
     

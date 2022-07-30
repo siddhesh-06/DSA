@@ -14,22 +14,6 @@ public class binarySearch {
 //                };
 //        int m = 4, n = 4;
     }
-
-    static boolean solve(String a, int k) {
-        int i = 0;
-        int j = a.length() - 1;
-
-        while (i <= j) {
-            if (a.charAt(i) != a.charAt(j)) {
-                k--;
-            }
-            i++;
-            j--;
-        }
-        if (k < 0) return false;
-        else return true;
-    }
-
     // 18] Allocate minimum number of pages
     static int findPages(int[] arr, int N, int key) {
         if (arr.length < key) return -1;
@@ -135,7 +119,7 @@ public class binarySearch {
 
     // 14] Min difference of key
     static int minDifference(int arr[], int k) {
-        // One more way is floor and ceil check diff return ans
+        // One more way is (key - floor) and (key - ceil) check diff return ans minimum
         int start = 0;
         int end = arr.length - 1;
 
@@ -150,7 +134,7 @@ public class binarySearch {
                 start = mid + 1;
             }
         }
-
+        // New tech for ceil and floor = arr[end] : ceil >>>> arr[start] : floor
         int minSide = Math.abs(arr[end] - k);
         int maxSide = Math.abs(arr[start] - k);
         if (minSide < maxSide) return minSide;
@@ -236,6 +220,7 @@ public class binarySearch {
 
     // 10] Find ceil element in sorted array
     static int ceilElement(int arr[],int k){
+        //just larger
         int s = 0;
         int e = arr.length-1;
         int res = -1;
@@ -320,7 +305,7 @@ public class binarySearch {
             int next = (mid+1)%length; // if mid is at end => start
             int prev = (mid+length-1)%length; // if mid is at start => end
             // search in unsorted array
-            if(arr[mid]<arr[next] && arr[mid]<arr[prev]){
+            if(arr[mid]<=arr[next] && arr[mid]<=arr[prev]){
                 return mid;
             }else if(arr[start]<=arr[mid]){
                 start = mid +1;
@@ -328,7 +313,7 @@ public class binarySearch {
                 end = mid -1;
             }
         }
-        return 0;
+        return -1;
     }
 
     // 5]Count of element

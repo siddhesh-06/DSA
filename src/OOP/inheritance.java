@@ -2,7 +2,7 @@ package OOP;
 
 class human{
     int color;
-   private int age;
+    private int age;
 }
 
 class men extends human{

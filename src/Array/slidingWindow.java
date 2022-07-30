@@ -6,17 +6,6 @@ import java.io.InputStreamReader;
 
 public class slidingWindow {
     public static void main(String args[]) throws IOException{
-
-      //  System.out.println(longestWithoutRepeat("pwwkew"));
-//        float x = 1;
-//        float y = 11;
-//        float yf = y/10;
-//
-//        if((double)x<yf){
-//            System.out.println("Disposable");
-//        }else{
-//            System.out.println("Cloth");
-//        }
         int arr[] = {1,3,-1,-3,5,3,6,7};
         System.out.println(maxSubarray(arr,3));
 

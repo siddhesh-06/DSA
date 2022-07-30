@@ -16,16 +16,12 @@ public class KnapsachDp {
         int n=4;
         int cap=7;
 
-        knapsackRecursive k =new knapsackRecursive();
-        System.out.println("Ans: "+k.recursiveKnap(w,v,cap,n));
+        KnapsachDp k =new KnapsachDp();
+        System.out.println("Ans: "+k.dpKnapsack(w,v,cap,n));
 
     }
 
-    public int max(int a,int b){
-        return  a>b ? a : b;
-    }
-
-    public int recursiveKnap(int[] w, int[] v, int cap, int n){
+    public int dpKnapsack(int[] w, int[] v, int cap, int n){
 
         // Initialize to ans of base condition
         for(int i=0;i<n+1;i++){
@@ -40,7 +36,7 @@ public class KnapsachDp {
             for(int j=1;j<cap+1;j++){
                 if(w[i-1]<=j){
                     //  v[i-1]+t[i][j-w[i-1]] for unbounded knapsack
-                    t[i][j] = max(v[i-1]+t[i-1][j-w[i-1]],t[i-1][j]);
+                    t[i][j] = Math.max(v[i-1]+t[i-1][j-w[i-1]],t[i-1][j]);
                 }else {
                     t[i][j] =t[i-1][j];
                 }

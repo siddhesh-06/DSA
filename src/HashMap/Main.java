@@ -51,17 +51,6 @@ public class Main {
             }
         }
 
-        private void rehash() throws Exception {
-            LinkedList<HMNode>[] oba = buckets;
-            initBuckets(oba.length*2);
-            size=0;
-            for(int i=0;i< oba.length;i++){
-                for(HMNode node: oba[i]){
-                    put(node.key,node.value);
-                }
-            }
-        }
-
         private int hashfn(K key){
             int hc = key.hashCode();
             return Math.abs(hc) % buckets.length;
@@ -76,6 +65,17 @@ public class Main {
                 di++;
             }
             return -1;
+        }
+
+        private void rehash() throws Exception {
+            LinkedList<HMNode>[] oba = buckets;
+            initBuckets(oba.length*2);
+            size=0;
+            for(int i=0;i< oba.length;i++){
+                for(HMNode node: oba[i]){
+                    put(node.key,node.value);
+                }
+            }
         }
 
         public V get(K key) throws Exception {
