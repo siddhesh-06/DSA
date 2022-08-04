@@ -1,26 +1,42 @@
 package Binary_Search;
-
-import com.sun.jdi.connect.Connector;
-import com.sun.source.tree.BinaryTree;
-
-import javax.swing.tree.TreeNode;
-import java.util.ArrayList;
+import java.util.*;
 
 public class striver_bs {
     public static void main(String args[]){
-        int arr[] = {1,2,3,8,10,15,20};
-        //binarySearch(arr, 7);
 
-        int mat[][] =
-                {
-                {1,2,3,4},
-                {6,7,8,9},
-                {12,11,13,15}
-                };
-
-        System.out.println(mat[0]);
     }
 
+    public static List<String> findAllRecipes(String[] recipes, List<List<String>> ingredients, String[] supplies) {
+        int n = recipes.length;
+        HashSet<String> hs = new HashSet<>();
+        for(String s : supplies){
+            hs.add(s);
+        }
+        List<String> ds = new ArrayList<>();
+
+        for(int i=0;i<n;i++){
+            String rec = recipes[i];
+
+            List<String> st = ingredients.get(i);
+            int size = st.size();
+            boolean found = true;
+            for(int j=0;j<size;j++){
+
+                String check = st.get(j);
+                if(!hs.contains(check)){
+                    found = false;
+                    break;
+                }
+            }
+            if(found){
+                hs.add(rec);
+                ds.add(rec);
+            }
+
+        }
+
+        return ds;
+    }
 
     //6] Kth element of 2 sorted array
 
@@ -67,7 +83,7 @@ public class striver_bs {
         return nums[e];
     }
 
-    //3]
+    //3] Find single element
     public int findSingleElement(int arr[]){
         int s = 0;
         int e = arr.length - 2;
@@ -113,12 +129,13 @@ public class striver_bs {
             for(int i=0;i<n;i++){
                 cnt += countSmallerThanEqualToMid(arr.get(i), mid);
             }
-            if(cnt <= (n*m)/2) s = mid + 1;
+            if(cnt <= (n*m)/2) s = mid + 1;  // cnt<k  where kth smaller element
             else e = mid - 1;
         }
          return s;
     }
 
+    //1] Binary search
     public static void binarySearch(int arr[], int key){
         int s = 0;
         int e = arr.length - 1;

@@ -4,40 +4,70 @@ import java.util.*;
 
 public class sorting {
     public static void main(String args[]){
-        sorting obj = new sorting();
-        String a="xaxbbbxx";
-
-        System.out.println(obj.anagram25(a));
+        int arr[] = {2,1,6,4,5,3};
+        int ans[] = {1,2,3,4,5,6};
     }
 
-    public int anagram25(String s) {
-        // Write your code here
-        int c=0;
-        int len =s.length();
-        if(len%2 != 0) return -1;
+    //5] Merge sort
+    public static void mergeSort(int arr[], int s, int e){
+        //base condition
+        if(s>=e) return;
 
-        int mid = len/2;
+        int mid = (s+e)/2;
+
+        //left
+        mergeSort(arr, s, mid);
+
+        //right
+        mergeSort(arr,mid+1,e);
+
+        merge(arr,s,e);
+    }
+    public static void merge(int arr[], int s, int e){
+        int mid = (s+e)/2;
+
+        int len1 = mid-s +1;
+        int len2 = e-mid;
 
 
-        String s1=s.substring(0,mid);
-        String s2=s.substring(mid,len);
+        int first[] = new int[len1];
+        int sec[] = new int[len2];
 
-        Arrays.sort(s1.toCharArray());
-        Arrays.sort(s2.toCharArray());
+        int k = s;
+        for(int i=0;i<len1;i++){
+            first[i] = arr[k++];
+        }
+        k = mid+1;
+        for(int i=0;i<len2;i++){
+            sec[i] = arr[k++];
+        }
 
-        for(int i=0;i<s1.length();i++){
-            if(s1.charAt(i)!=s2.charAt(i)) {
-                c++;
+
+        // merge two sorted array
+        int ind1 = 0, ind2 = 0;
+        k = s;
+
+        while (ind1<len1 && ind2<len2){
+            if(first[ind1]<sec[ind2]){
+                arr[k++] = first[ind1++];
+            }else{
+                arr[k++] = sec[ind2++];
             }
         }
-        return c;
+
+        while (ind1<len1) arr[k++] = first[ind1++];
+        while (ind2<len2) arr[k++] = sec[ind2++];
+
     }
 
-    public int[] quick(int arr[],int l){
-        for(int i=0;i<l;i++){
+    //4] Quick sort
+    public static int[] quick(int arr[]){
+        int n = arr.length;
+
+        for(int i=0;i<n;i++){
             int pivot =arr[i];
 
-            for(int j=0;i<i;j++){
+            for(int j=0;j<i;j++){
                 if(arr[j]>pivot){
                     int temp = arr[j];
                     arr[j] = pivot;
@@ -45,7 +75,7 @@ public class sorting {
                 }
             }
 
-            for(int j=i+1;j<l;j++){
+            for(int j=i+1;j<n;j++){
                 if(arr[j]<pivot){
                     int temp = pivot;
                     pivot = arr[j];
@@ -54,56 +84,72 @@ public class sorting {
             }
             arr[i]=pivot;
         }
+
         return arr;
     }
 
-    public int[] bubble(int arr[],int l){
-        for(int i=0;i<l;i++){
-
-            for(int j=0;j<l-i;j++){
-                if(arr[j+1]<arr[j]){
-                    int temp=arr[j+1];
-                    arr[j+1]=arr[j];
-                    arr[j]=temp;
-                }
-            }
-        }
-        return arr;
-    }
-
-
-    public int[] insertion(int arr[],int l){
-        // run time sort
-        int key=0;
-        int j=0;
-        for(int i=0;i<l;i++){
-            key = arr[i];
-            j=i-1;
-            while(j>=0 && arr[j]>key){
-                arr[j+1]=arr[j];
-                j--;
-            }
-            arr[j+1]=key;
-        }
-        return arr;
-    }
-
-    public int[] selection(int arr[],int l){
-        // placed min element first
-        for(int i=0;i<l;i++){
-            int min =i;
-
-            for(int j=i+1;j<l;j++){
-                if(arr[j]<arr[min]){
+    //3] Selection sort
+    public static int[] selection(int arr[]){
+        int n = arr.length;
+        for(int i=0;i<n-1;i++){
+            int min = i;
+            for(int j=i+1;j<n;j++){
+                if(arr[min]>arr[j]){
                     min = j;
                 }
             }
-            if(min!=i){
-                int temp=arr[min];
-                arr[min]=arr[i];
-                arr[i]=temp;
+            if (min!=i){
+                int temp = arr[i];
+                arr[i] = arr[min];
+                arr[min] = temp;
             }
         }
+
+        return arr;
+    }
+
+    //2] Insertion sort
+    public static int[] insertion(int arr[]){
+        int n =arr.length;
+
+        for(int i=1;i<n;i++){
+            int key = arr[i];
+            int j = i-1;
+
+            while (j>=0 && arr[j]>key){
+                arr[j+1] = arr[j];
+                j=j-1;
+            }
+            arr[j+1] = key;
+        }
+
+        return arr;
+    }
+
+    //1] Bubble sort
+    public static int[] bubble(int arr[]){
+        int n = arr.length;
+
+        for(int i=0;i<n-1;i++){
+            for(int j=0;j<n-1-i;j++){
+                if(arr[j]>arr[j+1]){
+                    int temp = arr[j];
+                    arr[j] = arr[j+1];
+                    arr[j+1] = temp;
+                }
+            }
+        }
+
         return arr;
     }
 }
+
+
+
+
+
+
+
+
+
+

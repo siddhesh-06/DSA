@@ -1,5 +1,6 @@
 package Graph;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 class Node{
@@ -176,7 +177,7 @@ public class graphPractice {
         boolean vis[] = new boolean[v+1];
         Arrays.fill(vis, false);
 
-        for(int i=1;i<=v;i++){
+        for(int i=1;i<v+1;i++){
             if(vis[i]==false){
                 dfs(i,vis,adj,ds);
             }
@@ -206,7 +207,8 @@ public class graphPractice {
                     return true;
                 }
             }
-        }return false;
+        }
+        return false;
     }
     public boolean cycleBFS(int i, boolean vis[], ArrayList<ArrayList<Integer>> adj){
         Queue<Node> q = new LinkedList<>();
@@ -220,7 +222,7 @@ public class graphPractice {
 
             for(Integer it : adj.get(node)){
                 if(vis[it]==false){
-                    q.add(new Node(it, node));
+                    q.add(new Node(it, node)); // child - parent
                     vis[it] = true;
                 }else if(par!=it){
                     return true;
@@ -249,11 +251,148 @@ public class graphPractice {
         vis[node] = true;
         for (Integer it : adj.get(node)){
             if(vis[it]==false){
-                if(cycleDFS(it, node,vis,adj)) return true;
-                else if (it != par) return true;
+                if(cycleDFS(it, node,vis,adj) == true) return true;
+            }else if(it!=par){
+                return true;
             }
         }
         return false;
+    }
+
+    //Toplogy sort = DFS
+    public ArrayList<Integer> topologySortDFS(int v, ArrayList<ArrayList<Integer>> adj){
+        ArrayList<Integer> ans = new ArrayList<>();
+        int vis[] = new int[v];
+        Stack<Integer> s = new Stack<>();
+
+        Arrays.fill(vis, -1);
+
+        for(int i=0;i<v;i++){
+            if(vis[i]==-1){
+                dfsTopo(i, s, vis, adj);
+            }
+        }
+        while (!s.isEmpty()){
+            ans.add(s.pop());
+        }
+        return ans;
+    }
+    public void dfsTopo(int node, Stack<Integer> s, int vis[], ArrayList<ArrayList<Integer>> adj){
+        vis[node] = 1;
+        for(Integer it : adj.get(node)){
+            if(vis[it]==-1){
+                vis[it] = 1;
+                dfsTopo(it, s, vis, adj);
+            }
+        }
+        s.push(node);
+    }
+
+    //Topology sort = BFS (Kah'ns algorithm)
+    public ArrayList<Integer> toplogySortBFS(int v, ArrayList<ArrayList<Integer>> adj){
+
+        ArrayList<Integer> ans = new ArrayList<>();
+        int inDegree[] = new int[v];
+        Arrays.fill(inDegree, 0);
+
+        //1] Filling indegree for all vertices
+        for(int i=0;i<v;i++){
+            for(Integer it : adj.get(i)){
+                inDegree[it]++;
+            }
+        }
+
+        //2] Create a queue and add vertices which has indegree zero
+        Queue<Integer> q = new LinkedList<>();
+        for(int i=0;i<v;i++){
+            if(inDegree[i]==0){
+                q.add(i);
+            }
+        }
+
+        while (!q.isEmpty()){
+            Integer node = q.poll();
+            ans.add(node);
+
+            for(Integer it : adj.get(node)){
+                inDegree[it]--;
+                if(inDegree[it]==0){
+                    q.add(it);
+                }
+            }
+        }
+
+        return ans;
+    }
+
+    //Directed graph cycle detetction = DFS
+    public boolean isCycleDFS(int v, ArrayList<ArrayList<Integer>> adj){
+        int vis[] = new int[v];
+        int dfsVis[] = new int[v];
+
+        Arrays.fill(vis, 0);
+        Arrays.fill(dfsVis, 0);
+
+        for(int i=0;i<v;i++){
+            if(vis[i]==0){
+                if(!directedCycleCheck(i, vis, dfsVis, adj)){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    public boolean directedCycleCheck(int node, int vis[], int dfsVis[], ArrayList<ArrayList<Integer>> adj){
+        vis[node] = 1;
+        dfsVis[node] = 1;
+
+        for(Integer it : adj.get(node)){
+            if(vis[it]==0){
+                if(directedCycleCheck(it, vis, dfsVis, adj)){
+                    return true;
+                }
+            }else if(dfsVis[it]==1) return true;
+        }
+        dfsVis[node] = 0 ;
+        return false;
+    }
+
+    //Directed grapth cycle detection = BFS (kah'ns algorithm)
+    public boolean directedCycleCheckBFS(int v, ArrayList<ArrayList<Integer>> adj){
+        int vis[] = new int[v];
+        int inDegree[] = new int[v];
+
+        Arrays.fill(vis,0);
+        Arrays.fill(inDegree, 0);
+
+        for(int i=0;i<v;i++){
+            for(Integer it : adj.get(i)){
+                inDegree[it]++;
+            }
+        }
+
+        Queue<Integer> q = new LinkedList<>();
+        for(int i=0;i<v;i++){
+            if(inDegree[i]==0){
+                q.offer(i);
+            }
+        }
+        int cn = 0;
+        while (!q.isEmpty()){
+            int node = q.poll();
+            cn++;
+
+            for(Integer it : adj.get(node)){
+                inDegree[it]--;
+                if(inDegree[it]==0){
+                    q.offer(it);
+                }
+            }
+        }
+
+        if(cn==v) return false;
+
+        return true;
     }
 
     //Check bipartite graph using BFS
@@ -317,141 +456,6 @@ public class graphPractice {
             }
         }
         return true;
-    }
-
-    //Directed graph cycle detetction = DFS
-    public boolean isCycleDFS(int v, ArrayList<ArrayList<Integer>> adj){
-        int vis[] = new int[v];
-        int dfsVis[] = new int[v];
-
-        Arrays.fill(vis, 0);
-        Arrays.fill(dfsVis, 0);
-
-        for(int i=0;i<v;i++){
-            if(vis[i]==0){
-                if(!directedCycleCheck(i, vis, dfsVis, adj)){
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    public boolean directedCycleCheck(int node, int vis[], int dfsVis[], ArrayList<ArrayList<Integer>> adj){
-        vis[node] = 1;
-        dfsVis[node] = 1;
-
-        for(Integer it : adj.get(node)){
-            if(vis[it]==0){
-                if(directedCycleCheck(it, vis, dfsVis, adj)){
-                    return true;
-                }
-            }else if(dfsVis[it]==1) return true;
-        }
-        dfsVis[node] = 0 ;
-        return false;
-    }
-
-    //Directed grapth cycle detection = BFS (kah'ns algorithm)
-    public boolean directedCycleCheckBFS(int v, ArrayList<ArrayList<Integer>> adj){
-        int vis[] = new int[v];
-        int inDegree[] = new int[v];
-
-        Arrays.fill(vis,0);
-        Arrays.fill(inDegree, 0);
-
-        for(int i=0;i<v;i++){
-            for(Integer it : adj.get(i)){
-                inDegree[it]++;
-            }
-        }
-        Queue<Integer> q = new LinkedList<>();
-        for(int i=0;i<v;i++){
-            if(inDegree[i]==0){
-                q.offer(i);
-            }
-        }
-        int cn = 0;
-        while (!q.isEmpty()){
-            int node = q.poll();
-            cn++;
-
-            for(Integer it : adj.get(node)){
-                inDegree[it]--;
-                if(inDegree[it]==0){
-                    q.offer(it);
-                }
-            }
-        }
-
-        if(cn==v) return false;
-
-        return true;
-    }
-
-    //Toplogy sort = DFS
-    public ArrayList<Integer> topologySortDFS(int v, ArrayList<ArrayList<Integer>> adj){
-        ArrayList<Integer> ans = new ArrayList<>();
-        int vis[] = new int[v];
-        Stack<Integer> s = new Stack<>();
-
-        Arrays.fill(vis, -1);
-
-        for(int i=0;i<v;i++){
-            if(vis[i]==-1){
-                dfsTopo(i, s, vis, adj);
-            }
-        }
-        while (!s.isEmpty()){
-            ans.add(s.pop());
-        }
-        return ans;
-    }
-    public void dfsTopo(int node, Stack<Integer> s, int vis[], ArrayList<ArrayList<Integer>> adj){
-        vis[node] = 1;
-
-        for(Integer it : adj.get(node)){
-            if(vis[it]==-1){
-                vis[it] = 1;
-                dfsTopo(it, s, vis, adj);
-            }
-        }
-        s.push(node);
-    }
-
-    //Topology sort = BFS (Kah'ns algorithm)
-    public ArrayList<Integer> toplogySortBFS(int v, ArrayList<ArrayList<Integer>> adj){
-        ArrayList<Integer> ans = new ArrayList<>();
-        int inDegree[] = new int[v];
-        Arrays.fill(inDegree, 0);
-
-        //1] Filling indegree for all vertices
-        for(int i=0;i<v;i++){
-            for(Integer it : adj.get(i)){
-                inDegree[it]++;
-            }
-        }
-
-        //2] Create a queue and add vertices which has indegree zero
-        Queue<Integer> q = new LinkedList<>();
-        for(int i=0;i<v;i++){
-            if(inDegree[i]==0){
-                q.add(i);
-            }
-        }
-
-        while (!q.isEmpty()){
-            Integer node = q.poll();
-            ans.add(node);
-
-            for(Integer it : adj.get(node)){
-                inDegree[it]--;
-                if(inDegree[it]==0){
-                    q.add(it);
-                }
-            }
-        }
-
-        return ans;
     }
 
     //Shortest path in undirected graph

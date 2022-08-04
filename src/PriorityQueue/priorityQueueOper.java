@@ -22,11 +22,11 @@ class priorityQueue{
                 System.out.println(rear);
                 arr[rear]=input;
             }else{
+                // Insertion sort
                 rear=rear+1;
                 arr[rear]=input;
                 j=rear-1;
-                while ( j>=front && arr[j]>arr[rear]){
-
+                while ( j>=front && arr[j]>input){
                     arr[j+1]=arr[j];
                     j--;
                 }

@@ -14,6 +14,7 @@ class queue{
         rear=null;
     }
 
+    // Insert
     public void enqueue(int info){
         node n=new node();
         n.data=info;
@@ -27,6 +28,7 @@ class queue{
         }
     }
 
+    // Delete
     public void dequeue(){
         if(isEmpty()){
             System.out.println("Queue is empty");
@@ -43,11 +45,10 @@ class queue{
         }
     }
 
-
+    // peek
     public int isRear(){
         return rear.data;
     }
-
 
     public boolean isEmpty(){
         if(top==null && rear==null){
@@ -55,7 +56,6 @@ class queue{
         }
         return false;
     }
-
 
     public void display(){
         if(isEmpty()){

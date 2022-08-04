@@ -13,7 +13,7 @@ class stack extends node{
         top=null;
     }
 
-    public void push(int info){
+    public void push(int info){ // insert at begining
         node n=new node();
         n.data=info;
 
@@ -44,7 +44,6 @@ class stack extends node{
         }
         return false;
     }
-
 
     public void display() {
         node temp=top;

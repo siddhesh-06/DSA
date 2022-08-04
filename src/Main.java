@@ -1,4 +1,3 @@
-
 import java.io.*;
 import java.util.*;
 
@@ -11,28 +10,20 @@ public class Main {
         //int test_case = Integer.parseInt(br.readLine());
         int test_case = sc.nextInt();
         for(int test = 0;test<test_case;test++){
-            int n = sc.nextInt();
-            String s = sc.next();
+            long m = sc.nextLong();
 
-            HashSet<Character> hs = new HashSet<>();
-
-            boolean flag = true;
-            for(int i=0;i<n-1;i++){
-                if(s.charAt(i)==s.charAt(i+1)) continue;
-                if(!hs.contains(s.charAt(i))){
-                    hs.add(s.charAt(i));
-                }else{
-                    flag = false;
+            long ans = 0;
+            int ind = -1;
+            for(int i=0;i<=9;i++){
+                long pow = (long) Math.pow(10,i);
+                if(m<pow){
+                    ind = i;
                     break;
                 }
             }
-            if(hs.contains(s.charAt(n-1))) flag = false;
 
-            if(flag){
-                System.out.println("YES");
-            }else{
-                System.out.println("NO");
-            }
+            ans = m- (long) Math.pow(10,ind-1) ;
+            System.out.println(ans);
         }
 
     }
