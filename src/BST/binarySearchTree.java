@@ -1087,7 +1087,7 @@ class bst extends treeNode{
             return root.leftNode;
         }else{
             treeNode rootRight = root.rightNode;
-            treeNode exRight = extremeRight(root);
+            treeNode exRight = extremeRight(root.leftNode);
             exRight.rightNode = rootRight;
 
             return root.leftNode;
@@ -1173,6 +1173,7 @@ class bst extends treeNode{
         ds.add(root.data);
         inOrderBST(root.rightNode, ds);
     }
+
 
     // LCA (lowest common ancestor) of BST
     static treeNode lcaBST(treeNode root, treeNode p, treeNode q){

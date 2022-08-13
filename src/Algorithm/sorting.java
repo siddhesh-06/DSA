@@ -4,12 +4,35 @@ import java.util.*;
 
 public class sorting {
     public static void main(String args[]){
-        int arr[] = {2,1,6,4,5,3};
-        int ans[] = {1,2,3,4,5,6};
+//        int arr[] = {2,1,6,4,5,3};
+//        mergeSort(arr,0,arr.length-1);
+//        for(int val : arr) System.out.println(val);
+//        int ans[] = {1,2,3,4,5,6};
+
+        System.out.println(myPow(2,7));
+    }
+
+    public static double myPow(double x, int n) {
+        double ans = 1.0;
+        long nn = n;
+
+        if(nn<0) nn = -1 * nn;
+
+        while(nn>0){
+            if(nn%2==1){
+                ans = ans * x;
+                nn = nn -1;
+            }else{
+                x = x*x;
+                nn = nn/2;
+            }
+        }
+        if(n<0) ans = (double)(1.0) / (double)(ans);
+        return ans;
     }
 
     //5] Merge sort
-    public static void mergeSort(int arr[], int s, int e){
+    public static void mergeSort(int arr[], int s, int e){ // e= n-1
         //base condition
         if(s>=e) return;
 
@@ -47,6 +70,7 @@ public class sorting {
         int ind1 = 0, ind2 = 0;
         k = s;
 
+        //If both are same length
         while (ind1<len1 && ind2<len2){
             if(first[ind1]<sec[ind2]){
                 arr[k++] = first[ind1++];
@@ -55,6 +79,7 @@ public class sorting {
             }
         }
 
+        //If anyone them are large
         while (ind1<len1) arr[k++] = first[ind1++];
         while (ind2<len2) arr[k++] = sec[ind2++];
 

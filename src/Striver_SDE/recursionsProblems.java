@@ -4,31 +4,120 @@ import java.util.*;
 
 public class recursionsProblems {
     public static void main(String args[]){
-        int arr[] = {2,3};
-        System.out.println(subsetsSum(arr));
+        int mat[][] = {
+                {1,0,1,0},
+                {1,1,0,1},
+                {1,1,1,0},
+                {0,0,1,1},
+        };
+        System.out.println(findPath(mat,mat.length));
     }
 
-    public long zeroFilledSubarray(int[] nums) {
-        int n = nums.length;
-        long zero = 0;
+    //12] Rat in maze
+    public static List<String> findPath(int m[][], int n){
+        List<String> ans = new ArrayList<>();
+        boolean vis[][] = new boolean[n][n];
+
+        if(m[0][0]==1){
+            getPaths(0,0,m,ans,"",vis,n);
+        }
+        return ans;
+    }
+    public static void getPaths(int i, int j, int mat[][], List<String> ans, String path, boolean vis[][], int n){
+        if(i==n-1 && j==n-1){
+            ans.add(path);
+            return;
+        }
+        //DLRU
+
+        //Down
+        if(i+1<n && !vis[i+1][j] && mat[i+1][j]==1){
+            vis[i][j] = true;
+            getPaths(i+1,j,mat,ans,path+"D",vis,n);
+            vis[i][j] = false;
+        }
+        //Left
+        if(j-1>=0 && !vis[i][j-1] && mat[i][j-1]==1){
+            vis[i][j] = true;
+            getPaths(i,j-1,mat,ans,path+"L",vis,n);
+            vis[i][j] = false;
+        }
+        //Right
+        if(j+1<n && !vis[i][j+1] && mat[i][j+1]==1){
+            vis[i][j] = true;
+            getPaths(i,j+1,mat,ans,path+"R",vis,n);
+            vis[i][j] = false;
+        }
+        //Up
+        if(i-1>=0 && !vis[i-1][j] && mat[i-1][j]==1){
+            vis[i][j] = true;
+            getPaths(i-1,j,mat,ans,path+"U",vis,n);
+            vis[i][j] = false;
+        }
+    }
+
+    //11] NQueen
+    public List<List<String>> solveNQueens(int n) {
+        char board[][] = new char[n][n];
         for(int i=0;i<n;i++){
-            if(nums[i]==0){
-                zero++;
+            for(int j=0;j<n;j++){
+                board[i][j] = '.';
             }
         }
 
-        long pairs = 0;
-        for(int i=0;i<n-1;i++){
-            if(nums[i]==nums[i+1]){
-                pairs++;
-            }
+        List<List<String>> ans = new ArrayList<>();
+        dfs(0, board, ans);
+        return ans;
+    }
+    public void dfs(int colInd, char board[][], List<List<String>> ans){
+        if(colInd==board.length){
+            ans.add(returnString(board));
+            return;
         }
 
-        long single = zero - (pairs*2);
-        if(single<0){
-            return (pairs*2) + pairs;
+        for(int i=0;i<board.length;i++){
+            if(isBoardValid(i, colInd, board)){
+                board[i][colInd] = 'Q';
+                dfs(colInd+1, board, ans);
+                board[i][colInd] = '.';
+            }
         }
-        return (pairs*2) + pairs + single;
+    }
+    public boolean isBoardValid(int row, int col, char board[][]){
+        int n = board.length;
+        int rowId = row;
+        int colId = col;
+
+        while (row>=0 && col>=0){
+            if(board[row][col]=='Q') return false;
+            row--; col--;
+        }
+
+        row = rowId;
+        col = colId;
+
+        while (col>=0){
+            if(board[row][col]=='Q') return false;
+            col--;
+        }
+
+        row = rowId;
+        col = colId;
+
+        while (row<n && col>=0){
+            if(board[row][col]=='Q') return false;
+            row++; col--;
+        }
+
+        return true;
+    }
+    public List<String> returnString(char board[][]){
+        List<String> res = new ArrayList<>();
+        for(int i=0;i<board.length;i++){
+            String s = new String(board[i]);
+            res.add(s);
+        }
+        return res;
     }
 
     //10] All subsequences
@@ -65,11 +154,15 @@ public class recursionsProblems {
 
         for(int i=0;i<nums.length;i++){
             if(track[i]) continue;
+
             track[i] = true;
             ds.add(nums[i]);
+
             allPermu(nums,ds,ans,track);
+
             ds.remove(ds.size()-1);
             track[i] = false;
+
         }
     }
 
@@ -171,6 +264,7 @@ public class recursionsProblems {
         Collections.sort(ans);
         return ans;
     }
+
     static void findSubsetSum(int idx,int nums[],int sum,List<Integer> ans){
         if(idx==nums.length){
             ans.add(sum);
@@ -256,7 +350,6 @@ public class recursionsProblems {
             }
             return;
         }
-
         if(arr[idx]<=target){
             ds.add(arr[idx]);
             findCombinations(idx,arr,target-arr[idx],ans,ds);

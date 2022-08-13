@@ -1,6 +1,5 @@
 package Graph;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 class Node{
@@ -13,7 +12,9 @@ class Node{
 class pair{
     private int v;
     private  int weight;
+
     pair(int _v, int _weight){ v = _v;  weight = _weight; }
+
     int getV(){ return v; }
     int getWeight(){ return weight; }
 }
@@ -31,7 +32,7 @@ class node implements Comparator<node>{
     public int getWeight() { return weight; }
 
     public int compare(node n1, node n2){
-        if(n1.weight<n2.weight) return -1;
+        if(n1.weight<n2.weight) return -1; // minimial at top
         if(n1.weight>n2.weight) return 1;
         return 0;
     }
@@ -525,7 +526,7 @@ public class graphPractice {
     public void dfsTopo1(int node, Stack<Integer> s, int vis[], ArrayList<ArrayList<pair>> adj){
         vis[node] = 1;
         for(pair it : adj.get(node)){
-            if(it.getV()==0){
+            if(vis[it.getV()]==0){
                 dfsTopo1(it.getV(), s, vis, adj);
             }
         }
@@ -564,9 +565,9 @@ public class graphPractice {
         boolean mst[] = new boolean[n];
 
         for(int i=0;i<n;i++){
-            key[i] = Integer.MAX_VALUE;
-            par[i] = -1;
-            mst[i] = false;
+            key[i] = Integer.MAX_VALUE; // for vertex
+            par[i] = -1; // storing par
+            mst[i] = false; // part of mst or not
         }
         key[0] = 0;
 
@@ -598,19 +599,24 @@ public class graphPractice {
         int key[] = new int[n];
         int par[] = new int[n];
         boolean mst[] = new boolean[n];
-        Arrays.fill(key, 1000);
-        Arrays.fill(mst, false);
+
+        for(int i=0;i<n;i++){
+            key[i] = Integer.MAX_VALUE;
+            par[i] = -1;
+            mst[i] = false;
+        }
 
         PriorityQueue<node> pq = new PriorityQueue<>(n,new node());
-        key[0] = 0;
-        par[0] = -1;
-        pq.add(new node(key[0], 0));
 
-        while (!pq.isEmpty()){
+        key[0] = 0;
+        pq.add(new node(key[0], 0)); //vertex and weight
+
+        for(int i=0;i<n;i++){
             int u = pq.poll().getV();
             mst[u] = true;
+
             for(node it : adj.get(u)){
-                if(mst[it.getV()] == false && it.getWeight() < key[it.getV()]){
+                if(mst[it.getV()]==false && it.getWeight() <key[it.getV()]){
                     key[it.getV()] = it.getWeight();
                     par[it.getV()] = u;
                     pq.add(new node(it.getV(), key[it.getV()]));
@@ -618,8 +624,8 @@ public class graphPractice {
             }
         }
 
-        for(int i =1;i<n;i++){
-            System.out.println(par[i] +"-"+i); //shortest path
+        for(int i=0;i<n;i++){
+            System.out.println(par[i]+"->"+i); //par->child
         }
     }
 
@@ -756,7 +762,8 @@ public class graphPractice {
         Arrays.fill(dist, 1000);
 
         dist[src] = 0;
-        for(int i=1;i<=v-1;i++){
+
+        for(int i=0;i<v-1;i++){ //v-1 times
             for(gNode nd : adj){
                 if(dist[nd.getU()] + nd.getWeight() < dist[nd.getV()]){
                     dist[nd.getV()] = dist[nd.getU()] + nd.getWeight();

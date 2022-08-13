@@ -34,6 +34,7 @@ class SortCompatator implements Comparator<gNode> {
 
 
 public class kruskalAlgo {
+
     public static void main(String args[]){
         int n = 5;
         ArrayList<gNode> adj = new ArrayList<>();
@@ -58,6 +59,7 @@ public class kruskalAlgo {
             par[i] = i;
             rank[i] = 0;
         }
+
         int costMst = 0;
         ArrayList<gNode> mst = new ArrayList<>();
 

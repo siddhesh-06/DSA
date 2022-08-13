@@ -12,7 +12,9 @@ public class stackPractice {
         arr.add(2);
         arr.add(0);
 
-        System.out.println(nextSmaller(arr, 6));
+        int a[] = {4,1,2};
+        int b[] = {1,3,4,2};
+        System.out.println(nextGreater(a,b));
     }
 
     static void sortStack(Stack<Integer> s){
@@ -113,20 +115,21 @@ public class stackPractice {
         return count_fresh==cnt ? count_min : -1;
     }
 
-    public int[] nextGreater(int nums1[], int nums2[]){
-        int ans[] = new int[nums2.length];
-        HashMap<Integer, Integer> hm = new HashMap<>();
+    public static int[] nextGreater(int nums1[], int nums2[]){
+        int ans[] = new int[nums1.length];
         Stack<Integer> s = new Stack<>();
+        HashMap<Integer, Integer> hm = new HashMap();
 
-        for(int num  :nums1){
-            while (!s.isEmpty() && num>s.peek()){
-                hm.put(s.pop(), num);
-            }
-            s.push(num);
-        }
-        int idx = 0;
         for(int val : nums2){
-            ans[idx++] = hm.getOrDefault(val, -1);
+            if(!s.isEmpty() && val>s.peek()){
+                hm.put(s.pop(), val);
+            }
+            s.push(val);
+        }
+
+        int ind = 0;
+        for(int val : nums1){
+            ans[ind++] = hm.getOrDefault(val, -1);
         }
 
         return ans;
@@ -152,7 +155,7 @@ public class stackPractice {
 
     }
 
-    //LRU => DLL ,Map => head ---priority----------------------- end
+    // LRU => DLL ,Map => head ---priority----------------------- end
     // Map => size => {int, address}
 
 }

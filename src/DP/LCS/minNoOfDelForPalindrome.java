@@ -14,7 +14,7 @@ public class minNoOfDelForPalindrome {
         }
     }
     public static void main(String args[]){
-        String x = "abc";
+        String x = "abcaa";
         String y = "";
 
         for(int i=x.length()-1;i>=0;i--){
@@ -40,7 +40,8 @@ public class minNoOfDelForPalindrome {
             }
         }
 
-        return m-t[m][n];
+        return m-t[m][n]; // for deleteion
+        //return n - t[m][n]; // for insertion
     }
 }
 

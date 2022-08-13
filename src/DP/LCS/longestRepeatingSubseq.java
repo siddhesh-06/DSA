@@ -3,6 +3,7 @@ package DP.LCS;
 public class longestRepeatingSubseq {
 
     public static void main(String args[]){
+        //subsequece repeat itself in s
         String x = "AABEBCDD";
         String y = x;
 

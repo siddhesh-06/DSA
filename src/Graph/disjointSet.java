@@ -1,13 +1,14 @@
 package Graph;
 
 public class disjointSet {
-    int rank[] = new int[1000];
-    int par[] = new int[1000];
+    int rank[] = new int[1000]; //how many elements connected
+    int par[] = new int[1000]; //gives par
 
     public static void main(String args[]){
         disjointSet dj = new disjointSet();
 
         dj.makeSet();
+
         int m = 5;
         while (m!=0){
             int u=0,v=0;
@@ -33,7 +34,7 @@ public class disjointSet {
         if(node == par[node]){
             return node;
         }
-        return par[node] = findPar(par[node]);
+        return par[node] = findPar(par[node]); //path compression
     }
 
     public void union(int u, int v){

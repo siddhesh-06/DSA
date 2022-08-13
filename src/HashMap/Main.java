@@ -37,7 +37,7 @@ public class Main {
 
             if(di!=-1){
                 HMNode node = buckets[bi].get(di);
-                node.value=value;
+                node.value = value;
             }else{
                 //insert
                 HMNode node=new HMNode(key,value);
@@ -70,6 +70,7 @@ public class Main {
         private void rehash() throws Exception {
             LinkedList<HMNode>[] oba = buckets;
             initBuckets(oba.length*2);
+
             size=0;
             for(int i=0;i< oba.length;i++){
                 for(HMNode node: oba[i]){
