@@ -58,7 +58,7 @@ public class patternQuetions {
         }
     }
 
-    public void patt1(){
+    public static void patt1(){
         int n = 4;
         int k = 1;
         for(int i=1;i<=4;i++){

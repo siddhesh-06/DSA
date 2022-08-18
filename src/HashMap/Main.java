@@ -31,7 +31,7 @@ public class Main {
             }
         }
 
-        public void put(K key,V value) throws Exception{
+        public void put(K key,V value) throws Exception{ // o(1)
             int bi = hashfn(key);
             int di = getIndexWithinBucket(key,bi);
 
@@ -45,6 +45,7 @@ public class Main {
                 size++;
             }
 
+            // loadbalancing
             double lamba = size * 1.0 / buckets.length;
             if(lamba>2.0){
                 rehash();
@@ -56,9 +57,9 @@ public class Main {
             return Math.abs(hc) % buckets.length;
         }
 
-        private int getIndexWithinBucket(K key,int value){
+        private int getIndexWithinBucket(K key,int bi){
             int di=0;
-            for(HMNode node: buckets[di]){
+            for(HMNode node: buckets[bi]){
                 if(node.key.equals(key)){
                     return di;
                 }
@@ -79,7 +80,7 @@ public class Main {
             }
         }
 
-        public V get(K key) throws Exception {
+        public V get(K key) throws Exception { // o(1)
             int bi = hashfn(key);
             int di = getIndexWithinBucket(key,bi);
 
@@ -95,7 +96,7 @@ public class Main {
             return size;
         }
 
-        private V remove(K key){
+        private V remove(K key){ // o(1)
             int bi = hashfn(key);
             int di = getIndexWithinBucket(key,bi);
 
@@ -108,7 +109,7 @@ public class Main {
             }
         }
 
-        public boolean containsKey(K key){
+        public boolean containsKey(K key){ //o(1)
             int bi = hashfn(key);
             int di = getIndexWithinBucket(key,bi);
 

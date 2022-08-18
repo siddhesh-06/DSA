@@ -472,6 +472,7 @@ public class graphPractice {
             int node = q.poll();
 
             for(int it : adj.get(node)){
+                // Or we can replace 1 wiht it.weight
                 if(dist[node] + 1 < dist[it]){  //All weights are 1 unit thats why we adding 1 in previous
                     dist[it] = dist[node] + 1;
                     q.add(it);
@@ -565,7 +566,7 @@ public class graphPractice {
         boolean mst[] = new boolean[n];
 
         for(int i=0;i<n;i++){
-            key[i] = Integer.MAX_VALUE; // for vertex
+            key[i] = Integer.MAX_VALUE; // for vertex stored distance
             par[i] = -1; // storing par
             mst[i] = false; // part of mst or not
         }
@@ -619,6 +620,8 @@ public class graphPractice {
                 if(mst[it.getV()]==false && it.getWeight() <key[it.getV()]){
                     key[it.getV()] = it.getWeight();
                     par[it.getV()] = u;
+
+
                     pq.add(new node(it.getV(), key[it.getV()]));
                 }
             }

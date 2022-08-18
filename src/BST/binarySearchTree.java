@@ -970,24 +970,24 @@ class bst extends treeNode{
         return root;
     }
 
-//    public TreeNode searchBST(TreeNode root, int val) {
-//        if (root==null) return null;
-//
-//        while (root!=null){
-//            if(root.val==val) return root;
-//            if(root.val< val){
-//                root = root.left;
-//            }else{
-//                root = root.right;
-//            }
-//        }
-//
-//        return null;
-//    }
+    public treeNode searchBST(treeNode root, int val) {
+        if (root==null) return null;
+
+        while (root!=null){
+            if(root.data==val) return root;
+            if(root.data< val){
+                root = root.leftNode;
+            }else{
+                root = root.rightNode;
+            }
+        }
+
+        return null;
+    }
 
     // Ceil in BST
     static int ceilInBST(treeNode node, int x){
-        // Just smaller
+        // Just large
         int ceil = -1;
         while(node!=null){
             if(node.data==x){
@@ -1007,7 +1007,7 @@ class bst extends treeNode{
 
     // Floor in BST
     static int floorInBST(treeNode root, int k){
-        // Just greater
+        // Just small
         int floor = -1;
         if(root==null) return floor;
 
@@ -1126,6 +1126,8 @@ class bst extends treeNode{
         Stack<treeNode> s = new Stack<>();
         treeNode curr = root;
         s.push(root);
+        // find total nodes : n
+        // kth largest = n- k; smallest
         int c = 0;
 
         while(true){
@@ -1246,6 +1248,7 @@ class bst extends treeNode{
     public void inorderRecover(treeNode root){
         if(root==null) return;
         inorderRecover(root.leftNode);
+
         if(prev!=null && root.data<prev.data){
             if(first==null){
                 first = prev;

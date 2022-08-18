@@ -4,31 +4,13 @@ import java.util.*;
 
 public class sorting {
     public static void main(String args[]){
-//        int arr[] = {2,1,6,4,5,3};
-//        mergeSort(arr,0,arr.length-1);
-//        for(int val : arr) System.out.println(val);
+        int arr[] = {2,4,1,5,3,7};
+        //mergeSort(arr,0,arr.length-1);
+        quickSortRecursion(arr, 0 ,arr.length-1);
+        for(int val : arr) System.out.println(val);
 //        int ans[] = {1,2,3,4,5,6};
 
-        System.out.println(myPow(2,7));
-    }
-
-    public static double myPow(double x, int n) {
-        double ans = 1.0;
-        long nn = n;
-
-        if(nn<0) nn = -1 * nn;
-
-        while(nn>0){
-            if(nn%2==1){
-                ans = ans * x;
-                nn = nn -1;
-            }else{
-                x = x*x;
-                nn = nn/2;
-            }
-        }
-        if(n<0) ans = (double)(1.0) / (double)(ans);
-        return ans;
+        //System.out.println(quick(arr));
     }
 
     //5] Merge sort
@@ -113,6 +95,56 @@ public class sorting {
         return arr;
     }
 
+    public static void quickSortRecursion(int arr[], int s, int e){ // e = n -1;
+        if(s>=e) return;
+
+        int p = partition(arr, s, e);
+
+        quickSortRecursion(arr, s, p-1);
+        quickSortRecursion(arr, p+1, e);
+    }
+    public static int partition(int arr[], int s, int e){
+        int pivot = arr[s];
+        int cnt = 0;
+        for (int i=s+1;i<=e;i++){
+            if(arr[i]<=pivot){
+                cnt++;
+            }
+        }
+
+        //Find index to store
+        int pivotIndex = s + cnt;
+
+        //Swap
+        int temp = arr[s];
+        arr[s] = arr[pivotIndex];
+        arr[pivotIndex] = temp;
+
+        int i = s, j = e;
+        while (i<pivotIndex && j>pivotIndex){
+            while (arr[i]<=pivot){
+                i++;
+            }
+            while (arr[j]>pivot){
+                j--;
+            }
+            if(i<pivotIndex && j>pivotIndex){
+                int temp1 = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp1;
+
+                i++;
+                j--;
+            }
+        }
+
+        return pivotIndex;
+
+
+
+
+    }
+
     //3] Selection sort
     public static int[] selection(int arr[]){
         int n = arr.length;
@@ -145,6 +177,7 @@ public class sorting {
                 arr[j+1] = arr[j];
                 j=j-1;
             }
+
             arr[j+1] = key;
         }
 
@@ -167,6 +200,7 @@ public class sorting {
 
         return arr;
     }
+
 }
 
 

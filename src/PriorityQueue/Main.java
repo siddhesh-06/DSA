@@ -38,12 +38,12 @@ class PriorityQueue{
     private void downHeapify(int pi){
         int mini = pi;
 
-        int leftInd = (pi+1)/2;
+        int leftInd = (pi+1)*2;
         if(leftInd<data.size() && data.get(leftInd)<data.get(mini)){
             mini = leftInd;
         }
 
-        int rightInd = (pi+2)/2;
+        int rightInd = (pi+2)*2;
         if(leftInd<data.size() && data.get(rightInd)<data.get(mini)){
             mini = rightInd;
         }

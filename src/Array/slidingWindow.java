@@ -68,8 +68,8 @@ public class slidingWindow {
                 ans = Math.max(ans, j-i+1);
                 j++;
             }else if(hm.size()>key){
-                char rm = s.charAt(i);
                 while (hm.size()>key){
+                    char rm = s.charAt(i);
                     hm.put(rm, hm.get(rm)-1);
                     if(hm.get(rm)==0) hm.remove(rm);
                     i++;
