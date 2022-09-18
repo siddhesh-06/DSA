@@ -7,13 +7,39 @@ public class Knapsack {
     //Rod cutting
 
     //Space-Opti
+    public static int cutRodDPSPACE(int price[], int n) {
+        int m = price.length;
+        // Use only horizontal row
+        int prev[] = new int[n+1];
+        int curr[] = new int[n+1];
+
+        for(int i=0;i<n+1;i++){
+            prev[i] = i*price[0];
+        }
+
+        for(int i=1;i<m;i++){
+            for(int j=0;j<n+1;j++){
+                int not = 0+ prev[j];
+                int take = Integer.MIN_VALUE;
+                int rodl = i+1;
+                if(rodl<=j){
+                    take = price[i] + curr[j-rodl];
+                }
+
+                curr[j] = Math.max(not, take);
+            }
+            prev = curr.clone();
+        }
+
+        return prev[n];
+    }
 
     //DP
     public static int cutRodDP(int price[], int n) {
-        // Write your code here.
-        //return helper(price, n, n-1);
         int m = price.length;
-        int dp[][] = new int[m][n+1];
+
+        int dp[][] = new int[m][n+1]; // n+1 why? extra for base case
+
         for(int i=0;i<n+1;i++){
             dp[0][i] = i*price[0];
         }
@@ -35,14 +61,16 @@ public class Knapsack {
     }
 
     //Recursive
-    public static int rodREC(int price[], int n, int ind){
-
-        if(ind==0){
-            return (n*price[0]);
+    public static int rodREC(int price[], int n, int ind){  // n = n, ind = n-1
+        //n = 5 , price = [2,5,7,8,10]
+        if(ind==0){               //  [1,1,1,1,1]
+            return (n*price[0]); // [2,2,2,2,2] = 2*5 = 10 , if n=5 then price will be
         }
 
         int not = 0 + rodREC(price, n, ind-1);
+
         int rodL = ind+1;
+
         int take = Integer.MIN_VALUE;
         if(rodL<=n){
             take = price[ind] + rodREC(price, n-rodL, ind);

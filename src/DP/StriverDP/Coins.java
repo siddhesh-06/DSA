@@ -35,10 +35,11 @@ public class Coins {
 
         return prev[value];
     }
-    //Dp
+    // Dp
     public static long countWaysToMakeChange(int coins[], int value){
         int n = coins.length;
         long dp[][] = new long[n][value+1];
+
         for(int i=0;i<value+1;i++){
             if(i%coins[0]==0) dp[0][i] = 1;
             else dp[0][i] = 0;
@@ -57,7 +58,7 @@ public class Coins {
 
         return dp[n-1][value];
     }
-    //Recursion
+    // Recursion
     public static long countWaysToMakeChange(int denominations[], int value, int n){
         if(n==0){
             if(value%denominations[0]==0) return 1;

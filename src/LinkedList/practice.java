@@ -193,6 +193,7 @@ public class practice {
         head1 = head;
         head2 = slow.next;
         slow.next = head1;
+
         Node cur = head2;
         while (cur.next!=head){
             cur=cur.next;
@@ -325,7 +326,7 @@ public class practice {
 
         //merge both left right
         Node result = merge(left, right);
-        return head;
+        return result;
     }
     static Node findMid(Node head){
         Node slow = head;
@@ -341,6 +342,7 @@ public class practice {
     static Node merge(Node left, Node right){
         if(left==null) return right;
         if(right==null) return left;
+
         Node ans = new Node(-1);
         Node temp = ans;
         while (left!=null && right!=null){

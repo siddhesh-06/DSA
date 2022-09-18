@@ -10,7 +10,11 @@ public class recursionsProblems {
                 {1,1,1,0},
                 {0,0,1,1},
         };
-        System.out.println(findPath(mat,mat.length));
+        //System.out.println(findPath(mat,mat.length));
+        int arr[] = {2,3,1};
+
+        System.out.println(Math.sqrt(7));
+
     }
 
     //12] Rat in maze
@@ -121,7 +125,7 @@ public class recursionsProblems {
     }
 
     //10] All subsequences
-    public static ArrayList<ArrayList<Integer>>  getAllSubsequences(int arr[]){
+    public static ArrayList<ArrayList<Integer>> getAllSubsequences(int arr[]){
         ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
         ArrayList<Integer> ds = new ArrayList<>();
         findSubseq(arr,0,ans,ds);
@@ -135,7 +139,6 @@ public class recursionsProblems {
         ds.add(arr[ind]);
         findSubseq(arr,ind+1,ans,ds);
         ds.remove(ds.size()-1);
-
         findSubseq(arr, ind+1, ans, ds);
     }
 
@@ -144,6 +147,7 @@ public class recursionsProblems {
         List<List<Integer>> ans = new ArrayList<>();
         List<Integer> ds = new ArrayList<>();
         boolean track[] = new boolean[nums.length];
+        allPermu(nums, ds, ans, track);
         return ans;
     }
     public static void allPermu(int nums[], List<Integer> ds, List<List<Integer>> ans, boolean track[]){
@@ -302,6 +306,7 @@ public class recursionsProblems {
     }
     static void findSubset(int idx,int nums[],List<List<Integer>> ans,List<Integer> ds){
         ans.add(new ArrayList<>(ds));
+
         for(int i= idx;i<nums.length;i++){
             ds.add(nums[i]);
             findSubset(i+1,nums,ans,ds);

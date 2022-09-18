@@ -329,13 +329,12 @@ class bst extends treeNode{
         return 1 + Math.max(l,r);
     }
 
-    // Balanced
+    // Balanced = AVL tree is treeNode
     public boolean isBalanced(treeNode root) {
         return dfsHeight(root) != -1;
     }
     private int dfsHeight(treeNode root){
         if(root==null) return 0;
-
         int l = dfsHeight(root.leftNode);
         if(l==-1) return -1;
 
@@ -365,7 +364,7 @@ class bst extends treeNode{
         return 1 + Math.max(l,r);
     }
 
-    // Maximum path sum => Max Dist betn 2 nodes
+    // Maximum path sum
     //int max = Integer.MIN_VALUE;
     public int maxPathSum(treeNode root) {
         int max[] = new int[1];
@@ -428,7 +427,7 @@ class bst extends treeNode{
     }
     void leftBoundry(treeNode root, ArrayList<Integer> ans){
         treeNode cur = root.leftNode;
-        if(cur!=null){
+        while(cur!=null){
             if(isLeaf(cur) == false) ans.add(cur.data);
             if(cur.leftNode!=null){
                 cur=cur.leftNode;
@@ -574,18 +573,18 @@ class bst extends treeNode{
     }
 
     // Symmetric bt
-//    static boolean symmetricORNot(treeNode root){
-//        return root==null || symmetricHelper(root.leftNode,root.rightNode);
-//    }
-//    static boolean symmetricHelper(treeNode left, treeNode right){
-//        if(left==null || right==null){
-//            return left==right;
-//        }
-//        if(left.data==right.data) return true;
-//        return symmetricORNot(left.leftNode, right.rightNode) || symmetricORNot(left.rightNode, right.leftNode);
-//    }
+    static boolean symmetricORNot(treeNode root){
+        return root==null || symmetricHelper(root.leftNode,root.rightNode);
+   }
+    static boolean symmetricHelper(treeNode left, treeNode right){
+       if(left==null || right==null){
+            return left==right;
+        }
+        if(left.data!=right.data) return false;
+        return (symmetricHelper(left.leftNode, right.rightNode) && symmetricHelper(left.rightNode, right.leftNode));
+    }
 
-    // Path root -> node
+    // Path root -> node : Do inorder and collect all nodes
     public ArrayList<Integer> pathRootToNode(treeNode root,treeNode key){
         ArrayList<Integer> ans = new ArrayList<>();
         if(root==null) return ans;
@@ -1201,9 +1200,12 @@ class bst extends treeNode{
     }
     static treeNode bstPre(int[] arr, int max,int[] i){
         if(i[0]==arr.length || arr[i[0]]>max) return null;
+
         treeNode temp = new treeNode(arr[i[0]++]);
+
         temp.leftNode = bstPre(arr,temp.data,i);
         temp.rightNode = bstPre(arr,max,i);
+
         return temp;
     }
 

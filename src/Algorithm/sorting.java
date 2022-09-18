@@ -4,10 +4,10 @@ import java.util.*;
 
 public class sorting {
     public static void main(String args[]){
-        int arr[] = {2,4,1,5,3,7};
+        int arr[] = {7,1,3,2,4,5,6};
         //mergeSort(arr,0,arr.length-1);
-        quickSortRecursion(arr, 0 ,arr.length-1);
-        for(int val : arr) System.out.println(val);
+        selection(arr);
+        //for(int val : arr) System.out.println(val);
 //        int ans[] = {1,2,3,4,5,6};
 
         //System.out.println(quick(arr));
@@ -32,7 +32,7 @@ public class sorting {
         int mid = (s+e)/2;
 
         int len1 = mid-s +1;
-        int len2 = e-mid;
+        int len2 = (e)-(mid+1) +1;
 
 
         int first[] = new int[len1];
@@ -42,6 +42,7 @@ public class sorting {
         for(int i=0;i<len1;i++){
             first[i] = arr[k++];
         }
+
         k = mid+1;
         for(int i=0;i<len2;i++){
             sec[i] = arr[k++];
@@ -146,8 +147,9 @@ public class sorting {
     }
 
     //3] Selection sort
-    public static int[] selection(int arr[]){
+    public static void selection(int arr[]){
         int n = arr.length;
+        int cnt = 0;
         for(int i=0;i<n-1;i++){
             int min = i;
             for(int j=i+1;j<n;j++){
@@ -159,10 +161,11 @@ public class sorting {
                 int temp = arr[i];
                 arr[i] = arr[min];
                 arr[min] = temp;
+                cnt++;
             }
         }
-
-        return arr;
+        System.out.println(cnt);
+        //return arr;
     }
 
     //2] Insertion sort

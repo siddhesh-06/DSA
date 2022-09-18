@@ -1,20 +1,13 @@
 package DP.StriverDP;
-
 import java.util.*;
 
-class reverse implements Comparator<Integer>{
-    @Override
-    public int compare(Integer o1, Integer o2) {
-        if(o2>o1) return 1;
-        return -1;
-    }
-}
 
 public class striverDP {
 
     public static void main(String args[]){
         int arr[][] = {{3,50},{7,10},{12,25}};
         System.out.println(calculateTax(arr,10));
+        List<Integer> st = new ArrayList<>();
     }
 
     public static double calculateTax(int[][] brackets, int income) {
